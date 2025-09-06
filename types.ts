@@ -11,6 +11,8 @@
 
 
 
+
+
 export enum SensorStatus {
   Online = 'Online',
   Offline = 'Offline',
@@ -221,6 +223,7 @@ export interface TimelineEvent {
   timestamp: number;
   description: string;
   severity: AlertSeverity;
+  operator?: string;
 }
 
 export type View = 

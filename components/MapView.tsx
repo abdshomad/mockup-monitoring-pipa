@@ -25,12 +25,16 @@ const MapView: React.FC = () => {
     }, []);
 
     const timelineEvents = useMemo((): TimelineEvent[] => {
-        return ALERTS.map(alert => ({
-            id: alert.id,
-            timestamp: new Date(alert.timestamp).getTime(),
-            description: `Alert ${alert.id}: ${alert.type}`,
-            severity: alert.severity,
-        }))
+        return ALERTS.map(alert => {
+            const lastAction = alert.history && alert.history.length > 0 ? alert.history[alert.history.length - 1] : null;
+            return {
+                id: alert.id,
+                timestamp: new Date(alert.timestamp).getTime(),
+                description: `Alert ${alert.id}: ${alert.type}`,
+                severity: alert.severity,
+                operator: lastAction?.operator,
+            };
+        })
         .filter(event => event.timestamp >= timeRange.startTime && event.timestamp <= timeRange.endTime)
         .sort((a, b) => a.timestamp - b.timestamp); // Ensure events are sorted chronologically
     }, [timeRange]);

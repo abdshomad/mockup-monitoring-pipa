@@ -69,23 +69,24 @@
   .time-machine-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #22d3ee; /* cyan-400 */
-    border: 3px solid #0f172a; /* slate-900 */
-    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2322d3ee'%3e%3cpath d='M8 5v14l11-7z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
-    margin-top: -7px; /* (thumb-height(16) - track-height(2)) / -2 + border correction */
+    margin-top: -8px; /* (thumb-height(24) - track-height(8)) / -2 */
     position: relative;
     z-index: 20;
   }
 
   .time-machine-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #22d3ee;
-    border: 3px solid #0f172a;
-    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2322d3ee'%3e%3cpath d='M8 5v14l11-7z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
     position: relative;
     z-index: 20;
