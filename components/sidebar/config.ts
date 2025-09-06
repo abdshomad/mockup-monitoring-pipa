@@ -4,7 +4,7 @@ import { ICONS } from '../../constants';
 export const menuConfig = {
     preConstruction: ['Planning', 'Site Survey', 'Design', 'Approvals'] as View[],
     construction: ['Implementation', 'Quality Assurance', 'Commissioning'] as View[],
-    operations: ['Dashboard', 'Alerts', 'Kanban View', 'Incident Log', 'Sensors', 'Map View'] as View[],
+    operations: ['Dashboard', 'Alerts', 'Incident Log', 'Sensors', 'Map View'] as View[],
     maintenance: ['Scheduled Maintenance', 'Asset Management'] as View[],
     analysis: ['System Health', 'Alert History', 'Technician Performance'] as View[],
     system: ['User Profile', 'Notifications', 'System Config'] as View[],
@@ -24,7 +24,6 @@ export const sidebarConfig: SidebarItem[] = [
     { type: 'expandable', label: 'Implementation', icon: ICONS.construction, views: menuConfig.construction, menuKey: 'construction', children: [{ view: 'Implementation' }, { view: 'Quality Assurance' }, { view: 'Commissioning' }] },
     { type: 'header', label: 'Operations' },
     { type: 'item', view: 'Alerts', icon: ICONS.alerts },
-    { type: 'item', view: 'Kanban View', icon: ICONS.kanban },
     { type: 'item', view: 'Incident Log', icon: ICONS.incidentLog },
     { type: 'sensors' },
     { type: 'item', view: 'Map View', icon: ICONS.map },

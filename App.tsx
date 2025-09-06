@@ -33,7 +33,6 @@ import { getRelativeTimestamp } from './utils/time';
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
   'Alerts': AlertsView,
-  'Kanban View': KanbanBoardView,
   'Incident Log': IncidentLogView,
   'Sensors': SensorsView,
   'Scheduled Maintenance': MaintenanceView,
@@ -159,7 +158,7 @@ const App: React.FC = () => {
     if (currentView === 'Dashboard') {
         return <Dashboard setCurrentView={handleSetCurrentView} />;
     }
-     if (currentView === 'Alerts' || currentView === 'Kanban View') {
+     if (currentView === 'Alerts') {
         const Component = viewComponents[currentView];
         return <Component setSelectedAlertId={setSelectedAlertId} />;
     }

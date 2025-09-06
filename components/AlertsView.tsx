@@ -1,11 +1,11 @@
-
-
 import React, { useState } from 'react';
 import { ALERTS } from '../constants';
-import { Alert, AlertSeverity, AlertWorkflowStage } from '../types';
+import { Alert, AlertWorkflowStage } from '../types';
 import { getSeverityBadgeClass, getStageBadgeClass } from '../utils/badgeStyles';
+import KanbanBoardView from './KanbanBoardView';
 
-const AlertsView: React.FC<{ setSelectedAlertId: (id: string | null) => void }> = ({ setSelectedAlertId }) => {
+// --- Sub-component for the List View ---
+const AlertsListView: React.FC<{ setSelectedAlertId: (id: string | null) => void }> = ({ setSelectedAlertId }) => {
     const [stageFilter, setStageFilter] = useState<AlertWorkflowStage | null>(null);
 
     const filteredAlerts = ALERTS.filter(
@@ -13,7 +13,7 @@ const AlertsView: React.FC<{ setSelectedAlertId: (id: string | null) => void }> 
     );
 
     return (
-        <div className="bg-slate-800 p-6 rounded-2xl shadow-lg animate-fade-in">
+        <div className="bg-slate-800 p-6 rounded-2xl shadow-lg">
             <h3 className="text-xl font-semibold mb-6 text-white">Alerts Log</h3>
 
             <div className="flex flex-wrap gap-2 items-center mb-6">
@@ -92,5 +92,43 @@ const AlertsView: React.FC<{ setSelectedAlertId: (id: string | null) => void }> 
         </div>
     );
 };
+
+
+// --- The new container component that manages tabs ---
+const AlertsView: React.FC<{
+    setSelectedAlertId: (id: string | null) => void;
+}> = ({ setSelectedAlertId }) => {
+    const [activeTab, setActiveTab] = useState('list');
+
+    return (
+        <div className="space-y-6">
+             <div className="border-b border-slate-700">
+                <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                    <button
+                        onClick={() => setActiveTab('list')}
+                        className={`${ activeTab === 'list' ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'} whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
+                    >
+                        List View
+                    </button>
+                     <button
+                        onClick={() => setActiveTab('kanban')}
+                        className={`${ activeTab === 'kanban' ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'} whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
+                    >
+                        Kanban Board
+                    </button>
+                </nav>
+            </div>
+            
+            <div className="animate-fade-in">
+                {activeTab === 'list' ? (
+                    <AlertsListView setSelectedAlertId={setSelectedAlertId} />
+                ) : (
+                    <KanbanBoardView setSelectedAlertId={setSelectedAlertId} />
+                )}
+            </div>
+        </div>
+    );
+};
+
 
 export default AlertsView;

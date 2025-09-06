@@ -3,7 +3,6 @@
 export type View =
   | 'Dashboard'
   | 'Alerts'
-  | 'Kanban View'
   | 'Incident Log'
   | 'Sensors'
   | 'Scheduled Maintenance'
