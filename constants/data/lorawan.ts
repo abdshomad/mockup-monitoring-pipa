@@ -1,4 +1,4 @@
-import { LoraWANGateway, LoraWANDevice, LoraWANGatewayStatus, LoraWANDeviceStatus } from '../../types';
+import { LoraWANGateway, LoraWANDevice, LoraWANGatewayStatus, LoraWANDeviceStatus, LoraWANDeviceHistoryPoint } from '../../types';
 import { getRelativeTimestamp } from '../../utils/time';
 
 export const LORAWAN_GATEWAYS: LoraWANGateway[] = [
@@ -31,3 +31,36 @@ export const LORAWAN_DEVICES: LoraWANDevice[] = [
     { id: 'A8B9CADBDCEDFE01', type: 'Pressure Sensor', status: LoraWANDeviceStatus.LowBattery, batteryLevel: 18, rssi: -95, snr: 4.1, lastUplink: getRelativeTimestamp({ minutes: -15 }), gatewayId: 'GW-04-INTERCHANGE' },
     { id: 'B9CADBDCEDFE0123', type: 'Flowmeter', status: LoraWANDeviceStatus.Online, batteryLevel: 89, rssi: -73, snr: 9.5, lastUplink: getRelativeTimestamp({ minutes: -4 }), gatewayId: 'GW-04-INTERCHANGE' },
 ];
+
+const generateDeviceHistory = (baseRssi: number, baseSnr: number): LoraWANDeviceHistoryPoint[] => {
+    const data: LoraWANDeviceHistoryPoint[] = [];
+    const now = new Date();
+    for (let i = 23; i >= 0; i--) {
+        const pointDate = new Date(now.getTime() - i * 60 * 60 * 1000);
+        const timeLabel = `${pointDate.getHours().toString().padStart(2, '0')}:00`;
+
+        const rssi = baseRssi + (Math.random() - 0.5) * 10;
+        const snr = baseSnr + (Math.random() - 0.5) * 4;
+
+        data.push({
+            time: timeLabel,
+            rssi: parseFloat(rssi.toFixed(0)),
+            snr: parseFloat(snr.toFixed(1)),
+        });
+    }
+    return data;
+};
+
+export const LORAWAN_DEVICE_HISTORY: Record<string, LoraWANDeviceHistoryPoint[]> = {
+    'A8610A3232387A6E': generateDeviceHistory(-75, 8.5),
+    'B1234C567890D12E': generateDeviceHistory(-82, 7.2),
+    'C9876B543210A54F': generateDeviceHistory(-90, 5.0),
+    'D1122E334455F66A': generateDeviceHistory(-78, 9.1),
+    'E6655D443322A11B': generateDeviceHistory(-72, 9.8),
+    'F1A2B3C4D5E6A7B8': generateDeviceHistory(-85, 6.5),
+    'A2B3C4D5E6F7A8B9': generateDeviceHistory(-88, 6.0),
+    'C4D5E6F7A8B9CADB': generateDeviceHistory(-80, 7.8),
+    'F7A8B9CADBDCEDFE': generateDeviceHistory(-70, 10.2),
+    'A8B9CADBDCEDFE01': generateDeviceHistory(-95, 4.1),
+    'B9CADBDCEDFE0123': generateDeviceHistory(-73, 9.5),
+};

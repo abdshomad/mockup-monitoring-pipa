@@ -4,10 +4,11 @@ import { AlertSeverity } from './alerts';
 
 export interface AIInsight {
   id: string;
-  category: 'Predictive Maintenance' | 'Operational Efficiency' | 'Risk Assessment';
+  category: 'Predictive Maintenance' | 'Operational Efficiency' | 'Risk Assessment' | 'Network Health';
   title: string;
   insight: string;
-  icon: 'predictiveMaintenance' | 'operationalEfficiency' | 'riskAssessment';
+  // FIX: Add 'lorawan' to the icon's union type to support Network Health insights.
+  icon: 'predictiveMaintenance' | 'operationalEfficiency' | 'riskAssessment' | 'lorawan';
 }
 
 export interface TimelineEvent {

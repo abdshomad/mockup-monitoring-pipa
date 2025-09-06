@@ -7,8 +7,11 @@ export const MAINTENANCE_SCHEDULE: MaintenanceTask[] = [
   { id: 'M-003', sensorId: 'P-VIB-005', task: 'Firmware Update v1.2.3', scheduledDate: getRelativeDate({ days: -2 }), assignedTechnician: 'Alice Johnson', status: MaintenanceStatus.Completed },
   { id: 'M-005', sensorId: 'P-VIB-006', task: 'Flowmeter Accuracy Verification', scheduledDate: getRelativeDate({ days: -1 }), assignedTechnician: 'Bob Williams', status: MaintenanceStatus.Completed },
   { id: 'M-006', sensorId: 'P-VIB-001', task: 'Antenna Signal Test', scheduledDate: getRelativeDate({ days: 0 }), assignedTechnician: 'Alice Johnson', status: MaintenanceStatus.InProgress },
+  { id: 'M-010', sensorId: 'C9876B543210A54F', task: 'LoRaWAN Device Battery Replacement', scheduledDate: getRelativeDate({ days: 1 }), assignedTechnician: 'Bob Williams', status: MaintenanceStatus.Scheduled },
+  { id: 'M-011', sensorId: 'A8B9CADBDCEDFE01', task: 'LoRaWAN Device Battery Replacement', scheduledDate: getRelativeDate({ days: 1 }), assignedTechnician: 'Charlie Brown', status: MaintenanceStatus.Scheduled },
   { id: 'M-002', sensorId: 'P-VIB-008', task: 'Routine Calibration Check', scheduledDate: getRelativeDate({ days: 2 }), assignedTechnician: 'Bob Williams', status: MaintenanceStatus.Scheduled },
   { id: 'M-004', sensorId: 'P-VIB-002', task: 'Post-Alert Sensor Inspection', scheduledDate: getRelativeDate({ days: 3 }), assignedTechnician: 'Charlie Brown', status: MaintenanceStatus.Scheduled },
+  { id: 'M-012', sensorId: 'B3C4D5E6F7A8B9CA', task: 'Investigate Offline LoRaWAN Device', scheduledDate: getRelativeDate({ days: 4 }), assignedTechnician: 'Alice Johnson', status: MaintenanceStatus.Scheduled },
   { id: 'M-001', sensorId: 'P-VIB-004', task: 'Battery Replacement & Full Diagnostic', scheduledDate: getRelativeDate({ days: 5 }), assignedTechnician: 'Alice Johnson', status: MaintenanceStatus.Scheduled },
   { id: 'M-008', sensorId: 'P-VIB-003', task: 'Acoustic Membrane Check', scheduledDate: getRelativeDate({ days: 10 }), assignedTechnician: 'Charlie Brown', status: MaintenanceStatus.Scheduled },
 ];

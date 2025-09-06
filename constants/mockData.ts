@@ -11,3 +11,4 @@ export * from './data/timeSeriesData';
 export * from './data/historicalData';
 export * from './data/deployments';
 export * from './data/lorawan';
+export * from './data/lorawanInsights';

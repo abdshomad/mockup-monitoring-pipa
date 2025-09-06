@@ -15,6 +15,8 @@ const getCategoryStyle = (category: AIInsight['category']): { color: string, ico
             return { color: 'text-cyan-400', icon: ICONS.operationalEfficiency };
         case 'Risk Assessment':
             return { color: 'text-red-400', icon: ICONS.riskAssessment };
+        case 'Network Health':
+            return { color: 'text-purple-400', icon: ICONS.lorawan };
         default:
             return { color: 'text-slate-400', icon: ICONS.ai };
     }

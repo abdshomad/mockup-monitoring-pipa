@@ -26,3 +26,9 @@ export interface LoraWANGateway {
     location: string;
     connectedDevices: number;
 }
+
+export interface LoraWANDeviceHistoryPoint {
+    time: string;
+    rssi: number;
+    snr: number;
+}
