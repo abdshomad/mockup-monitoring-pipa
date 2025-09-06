@@ -1,17 +1,18 @@
 import React from 'react';
 import { COMMISSIONING_TASKS } from '../constants';
 import { CommissioningTask } from '../types';
+import { CheckCircle2, Loader2, CircleDot } from 'lucide-react';
 
 const CommissioningView: React.FC = () => {
 
     const getStatusIcon = (status: CommissioningTask['status']) => {
         switch (status) {
             case 'Completed':
-                return <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>;
+                return <CheckCircle2 className="h-5 w-5 text-green-400" />;
             case 'In Progress':
-                return <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-400 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" /></svg>;
+                return <Loader2 className="h-5 w-5 text-yellow-400 animate-spin" />;
             case 'Not Started':
-                 return <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 9a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd" /></svg>;
+                 return <CircleDot className="h-5 w-5 text-slate-500" />;
         }
     }
 

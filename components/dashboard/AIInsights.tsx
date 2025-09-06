@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AIInsight } from '../../types';
 import { ICONS } from '../../constants';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface AIInsightsProps {
     insights: AIInsight[];
@@ -82,10 +83,10 @@ const AIInsights: React.FC<AIInsightsProps> = ({ insights }) => {
                 {insights.length > 1 && (
                     <>
                         <button onClick={prevSlide} className="absolute top-1/2 -translate-y-1/2 -left-4 p-2 rounded-full bg-slate-700/80 hover:bg-slate-600 text-slate-300 transition-colors duration-200 z-10" aria-label="Previous slide">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                            <ChevronLeft className="h-5 w-5" />
                         </button>
                         <button onClick={nextSlide} className="absolute top-1/2 -translate-y-1/2 -right-4 p-2 rounded-full bg-slate-700/80 hover:bg-slate-600 text-slate-300 transition-colors duration-200 z-10" aria-label="Next slide">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                            <ChevronRight className="h-5 w-5" />
                         </button>
                     </>
                 )}

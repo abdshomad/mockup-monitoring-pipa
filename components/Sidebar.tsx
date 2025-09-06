@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View } from '../types';
 import { ICONS } from '../constants';
 import { SensorType } from '../types';
+import { ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
   currentView: View;
@@ -35,12 +36,6 @@ const NavItem: React.FC<{
   );
 };
 
-const ChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
-    <svg className={`w-5 h-5 transition-transform duration-200 ${open ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-    </svg>
-);
-
 const getSensorTypeIcon = (type: SensorType) => {
     switch (type) {
         case SensorType.VibrationPressure: return ICONS.sensorVibrationPressure;
@@ -72,7 +67,7 @@ const ExpandableNavItem: React.FC<{
           {icon}
           <span className="ml-4 font-medium">{label}</span>
         </div>
-        <ChevronIcon open={isOpen} />
+        <ChevronRight className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
       </div>
       {isOpen && <ul className="pl-6 mt-1 space-y-1">{children}</ul>}
     </li>

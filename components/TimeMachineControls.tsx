@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ICONS } from '../constants';
 import { TimelineEvent, AlertSeverity } from '../types';
+import { Clock } from 'lucide-react';
 
 interface TimeMachineControlsProps {
     startTime: number;
@@ -73,7 +74,7 @@ const TimeMachineControls: React.FC<TimeMachineControlsProps> = ({
         <div className="absolute bottom-0 left-0 right-0 bg-slate-800/80 backdrop-blur-sm p-4 rounded-t-2xl shadow-lg border-t border-slate-700 animate-fade-in">
             <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <Clock className="h-6 w-6 text-cyan-400" />
                     <h3 className="text-lg font-semibold text-white">Time Machine</h3>
                 </div>
                 <div className="text-center w-48 bg-slate-700/50 p-2 rounded-lg">
