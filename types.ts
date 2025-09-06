@@ -1,5 +1,6 @@
 
 
+
 export enum SensorStatus {
   Online = 'Online',
   Offline = 'Offline',
@@ -74,10 +75,20 @@ export interface Sensor {
   type: SensorType;
 }
 
+export interface Attachment {
+  type: 'image' | 'audio';
+  data: string; // base64 encoded data URI
+  mimeType: string;
+  fileName: string;
+  aiAnalysis?: string;
+}
+
+
 export interface AlertAction {
   timestamp: string;
   action: string;
   operator: string;
+  attachment?: Attachment;
 }
 
 export interface Alert {

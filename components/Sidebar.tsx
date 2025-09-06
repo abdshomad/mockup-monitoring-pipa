@@ -95,12 +95,12 @@ type SidebarItem =
     | { type: 'sensors' };
 
 const sidebarConfig: SidebarItem[] = [
+    { type: 'item', view: 'Dashboard', icon: ICONS.dashboard },
     { type: 'header', label: 'Pre-Construction' },
     { type: 'expandable', label: 'Planning', icon: ICONS.preConstruction, views: menuConfig.preConstruction, menuKey: 'preConstruction', children: [{ view: 'Planning' }, { view: 'Site Survey' }, { view: 'Design' }, { view: 'Approvals' }] },
     { type: 'header', label: 'Construction' },
     { type: 'expandable', label: 'Implementation', icon: ICONS.construction, views: menuConfig.construction, menuKey: 'construction', children: [{ view: 'Implementation' }, { view: 'Quality Assurance' }, { view: 'Commissioning' }] },
     { type: 'header', label: 'Operations' },
-    { type: 'item', view: 'Dashboard', icon: ICONS.dashboard },
     { type: 'item', view: 'Alerts', icon: ICONS.alerts },
     { type: 'sensors' },
     { type: 'item', view: 'Map View', icon: ICONS.map },
