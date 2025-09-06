@@ -1,20 +1,10 @@
-
-
 import React, { useState } from 'react';
 import { MAINTENANCE_SCHEDULE, TECHNICIANS } from '../constants';
 import { MaintenanceStatus, MaintenanceTask, TechnicianStatus } from '../types';
+import { getMaintenanceStatusBadgeClass } from '../utils/badgeStyles';
 
 const MaintenanceView: React.FC = () => {
     const [statusFilter, setStatusFilter] = useState<MaintenanceStatus | null>(null);
-
-    const getStatusBadgeClass = (status: MaintenanceStatus) => {
-        switch (status) {
-            case MaintenanceStatus.Scheduled: return 'bg-cyan-500/20 text-cyan-400';
-            case MaintenanceStatus.InProgress: return 'bg-yellow-500/20 text-yellow-400';
-            case MaintenanceStatus.Completed: return 'bg-green-500/20 text-green-400';
-            default: return 'bg-slate-500/20 text-slate-400';
-        }
-    };
 
     const getTechnicianAvailabilityBadgeClass = (status: TechnicianStatus) => {
         switch (status) {
@@ -95,7 +85,7 @@ const MaintenanceView: React.FC = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(task.status)}`}>
+                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getMaintenanceStatusBadgeClass(task.status)}`}>
                                                 {task.status}
                                             </span>
                                         </td>

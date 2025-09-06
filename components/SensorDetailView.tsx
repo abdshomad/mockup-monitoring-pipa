@@ -4,6 +4,7 @@ import DataChart from './DataChart';
 import SensorHealthScore from './sensor-details/SensorHealthScore';
 import SensorStatusDetails from './sensor-details/SensorStatusDetails';
 import SensorRecentAlerts from './sensor-details/SensorRecentAlerts';
+import SensorAIAnalysis from './sensor-details/SensorAIAnalysis';
 
 interface SensorDetailViewProps {
   sensorId: string;
@@ -39,6 +40,7 @@ const SensorDetailView: React.FC<SensorDetailViewProps> = ({ sensorId, onBack })
         <div className="lg:col-span-1 space-y-6">
             <SensorHealthScore sensor={sensor} alerts={ALERTS} />
             <SensorStatusDetails sensor={sensor} />
+            <SensorAIAnalysis sensor={sensor} sensorHistory={sensorHistory} />
             <SensorRecentAlerts alerts={sensorAlerts} />
         </div>
         <div className="lg:col-span-2 bg-slate-800 p-6 rounded-2xl shadow-lg">

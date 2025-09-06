@@ -1,8 +1,9 @@
+
 import React, { useMemo } from 'react';
-import { ICONS } from '../constants';
 import { TimelineEvent } from '../types';
 import { Clock } from 'lucide-react';
-import TimelineEventMarker from './time-machine/TimelineEventMarker';
+import PlaybackControls from './time-machine/PlaybackControls';
+import TimelineSlider from './time-machine/TimelineSlider';
 
 interface TimeMachineControlsProps {
     startTime: number;
@@ -17,18 +18,9 @@ interface TimeMachineControlsProps {
     onReset: () => void;
 }
 
-const TimeMachineControls: React.FC<TimeMachineControlsProps> = ({
-    startTime,
-    endTime,
-    currentTime,
-    isPlaying,
-    playbackSpeed,
-    events,
-    onTimeChange,
-    onPlayPauseToggle,
-    onSpeedChange,
-    onReset,
-}) => {
+const TimeMachineControls: React.FC<TimeMachineControlsProps> = (props) => {
+    const { currentTime } = props;
+
     const formattedTime = useMemo(() => new Date(currentTime).toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -49,57 +41,20 @@ const TimeMachineControls: React.FC<TimeMachineControlsProps> = ({
                 </div>
             </div>
             <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                    <button 
-                        onClick={onReset} 
-                        className="p-2 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-colors"
-                        aria-label="Reset to start"
-                    >
-                        {ICONS.rewind}
-                    </button>
-                    <button 
-                        onClick={onPlayPauseToggle} 
-                        className="p-2 rounded-full bg-cyan-500 text-white hover:bg-cyan-600 transition-colors"
-                        aria-label={isPlaying ? "Pause" : "Play"}
-                    >
-                        {isPlaying ? ICONS.pause : ICONS.play}
-                    </button>
-                    <button 
-                        onClick={onSpeedChange} 
-                        className="p-2 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-colors flex items-center space-x-1"
-                        aria-label="Change playback speed"
-                    >
-                        {ICONS.fastForward}
-                        <span className="text-xs font-bold w-4">{playbackSpeed}x</span>
-                    </button>
-                </div>
-                <div className="flex-grow flex items-center space-x-3">
-                     <span className="text-xs text-slate-400 font-mono">{new Date(startTime).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })}</span>
-                     <div className="relative w-full h-12 flex items-center">
-                        <div className="absolute top-1/2 -translate-y-1/2 w-full h-2 bg-slate-700 rounded-lg"></div>
-                        
-                        <div className="absolute w-full h-full pointer-events-none">
-                           {events.map(event => (
-                               <TimelineEventMarker 
-                                   key={event.id} 
-                                   event={event} 
-                                   startTime={startTime} 
-                                   endTime={endTime} 
-                               />
-                           ))}
-                        </div>
-
-                         <input
-                            type="range"
-                            min={startTime}
-                            max={endTime}
-                            value={currentTime}
-                            onChange={(e) => onTimeChange(Number(e.target.value))}
-                            className="time-machine-slider w-full h-2 appearance-none cursor-pointer bg-transparent focus:outline-none relative z-10"
-                        />
-                     </div>
-                     <span className="text-xs text-slate-400 font-mono">{new Date(endTime).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })}</span>
-                </div>
+                <PlaybackControls
+                    isPlaying={props.isPlaying}
+                    playbackSpeed={props.playbackSpeed}
+                    onReset={props.onReset}
+                    onPlayPauseToggle={props.onPlayPauseToggle}
+                    onSpeedChange={props.onSpeedChange}
+                />
+                <TimelineSlider
+                    startTime={props.startTime}
+                    endTime={props.endTime}
+                    currentTime={props.currentTime}
+                    events={props.events}
+                    onTimeChange={props.onTimeChange}
+                />
             </div>
         </div>
     );

@@ -1,17 +1,13 @@
+
 import React, { useState } from 'react';
-import { ALERT_DETAILS } from '../constants/alert-details';
-import { ICONS } from '../constants';
-import { Alert, AlertWorkflowStage } from '../types';
+import { Alert } from '../types';
 import KanbanView from './alert-workflow/KanbanView';
 import TimelineView from './alert-workflow/TimelineView';
 import ResolutionModal from './ResolutionModal';
 import AIIncidentReportModal from './AIIncidentReportModal';
-import AlertSummary from './alert-details/AlertSummary';
-import AlertInformation from './alert-details/AlertInformation';
-import AIAnalysis from './alert-details/AIAnalysis';
-import MultimediaAttachments from './alert-details/MultimediaAttachments';
 import { useAlertWorkflow } from '../hooks/useAlertWorkflow';
 import AlertDetailHeader from './alert-details/AlertDetailHeader';
+import AlertDetailsTab from './alert-details/AlertDetailsTab';
 
 interface AlertDetailViewProps {
   alert: Alert | undefined;
@@ -21,23 +17,15 @@ interface AlertDetailViewProps {
 
 type AlertDetailTab = 'details' | 'timeline' | 'kanban';
 
+const TABS: AlertDetailTab[] = ['details', 'timeline', 'kanban'];
+
 const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack, onPromoteToIncident }) => {
   const [activeTab, setActiveTab] = useState<AlertDetailTab>('details');
   const {
-      currentAlert,
-      isResolutionModalOpen,
-      isReportModalOpen,
-      alertForReport,
-      handleStageChange,
-      handleConfirmResolution,
-      setIsResolutionModalOpen,
-      setCurrentAlert,
-      setIsReportModalOpen,
+      currentAlert, isResolutionModalOpen, isReportModalOpen, alertForReport,
+      handleStageChange, handleConfirmResolution, setIsResolutionModalOpen,
+      setCurrentAlert, setIsReportModalOpen,
   } = useAlertWorkflow(alert);
-
-
-  const details = currentAlert ? ALERT_DETAILS[currentAlert.type] : null;
-  const aiAnalysis = details?.aiInsights;
 
   if (!currentAlert) {
     return (
@@ -52,68 +40,33 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack, onProm
 
   const renderContent = () => {
     switch(activeTab) {
-      case 'timeline':
-        return <TimelineView history={currentAlert.history || []} />;
-      case 'kanban':
-        return <KanbanView alert={currentAlert} onStageChange={handleStageChange} />;
+      case 'timeline': return <TimelineView history={currentAlert.history || []} />;
+      case 'kanban': return <KanbanView alert={currentAlert} onStageChange={handleStageChange} />;
       case 'details':
-      default:
-        return (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-6">
-              <AlertSummary alert={currentAlert} />
-            </div>
-            <div className="lg:col-span-2 space-y-6">
-              {details && <AlertInformation details={details} />}
-              {aiAnalysis && <AIAnalysis aiAnalysis={aiAnalysis} />}
-            </div>
-            <div className="lg:col-span-3">
-              <MultimediaAttachments 
-                currentAlert={currentAlert}
-                setCurrentAlert={setCurrentAlert}
-              />
-            </div>
-          </div>
-        );
+      default: return <AlertDetailsTab currentAlert={currentAlert} setCurrentAlert={setCurrentAlert} />;
     }
   }
 
   return (
     <>
-      <ResolutionModal 
-        isOpen={isResolutionModalOpen}
-        onClose={() => setIsResolutionModalOpen(false)}
-        onConfirm={handleConfirmResolution}
-      />
-      <AIIncidentReportModal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        alert={alertForReport}
-      />
+      <ResolutionModal isOpen={isResolutionModalOpen} onClose={() => setIsResolutionModalOpen(false)} onConfirm={handleConfirmResolution} />
+      <AIIncidentReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} alert={alertForReport} />
+      
       <div className="space-y-6">
         <AlertDetailHeader alert={currentAlert} onBack={onBack} onPromoteToIncident={onPromoteToIncident} />
 
         <div className="border-b border-slate-700 mb-4">
             <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                {(['details', 'timeline', 'kanban'] as AlertDetailTab[]).map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`${
-                            activeTab === tab
-                                ? 'border-cyan-400 text-cyan-400'
-                                : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'
-                        } whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
-                    >
+                {TABS.map((tab) => (
+                    <button key={tab} onClick={() => setActiveTab(tab)}
+                        className={`${ activeTab === tab ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'} whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}>
                         {tab}
                     </button>
                 ))}
             </nav>
         </div>
 
-        <div className="animate-fade-in">
-          {renderContent()}
-        </div>
+        <div className="animate-fade-in">{renderContent()}</div>
       </div>
     </>
   );

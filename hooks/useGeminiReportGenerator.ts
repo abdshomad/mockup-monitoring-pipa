@@ -72,6 +72,12 @@ export const useGeminiReportGenerator = () => {
             setLoading(false);
         }
     }, []);
+    
+    const reset = useCallback(() => {
+        setData(null);
+        setLoading(false);
+        setError(null);
+    }, []);
 
-    return { generateReport, data, loading, error };
+    return { generateReport, data, loading, error, reset };
 };

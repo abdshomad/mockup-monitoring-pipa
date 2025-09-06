@@ -1,47 +1,69 @@
 import { Approval, ApprovalStatus, QACheck, CommissioningTask } from '../../types';
-
-// --- TIME HELPER FUNCTIONS ---
-const MOCK_CURRENT_DATE = new Date('2025-09-06T14:30:00Z');
-
-const formatTimestamp = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-};
-
-const formatDate = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
-
-const getRelativeTimestamp = (offset: { days?: number, hours?: number, minutes?: number, seconds?: number }): string => {
-    const now = new Date(MOCK_CURRENT_DATE);
-    if (offset.days) now.setDate(now.getDate() + offset.days);
-    if (offset.hours) now.setHours(now.getHours() + offset.hours);
-    if (offset.minutes) now.setMinutes(now.getMinutes() + offset.minutes);
-    if (offset.seconds) now.setSeconds(now.getSeconds() + offset.seconds);
-    return formatTimestamp(now);
-};
-
-const getRelativeDate = (offset: { days?: number, months?: number, years?: number }): string => {
-    const now = new Date(MOCK_CURRENT_DATE);
-    if (offset.years) now.setFullYear(now.getFullYear() + offset.years);
-    if (offset.months) now.setMonth(now.getMonth() + offset.months);
-    if (offset.days) now.setDate(now.getDate() + offset.days);
-    return formatDate(now);
-};
+import { getRelativeTimestamp, getRelativeDate } from '../../utils/time';
 
 export const APPROVALS: Approval[] = [
-    { id: 'APP-001', name: 'Environmental Impact Assessment', authority: 'Ministry of Environment', status: ApprovalStatus.Approved, submitted: getRelativeDate({ days: -80 }), approved: getRelativeDate({ days: -20 }) },
-    { id: 'APP-002', name: 'Right-of-Way Permit', authority: 'National Land Authority', status: ApprovalStatus.Pending, submitted: getRelativeDate({ days: -40 }), approved: null },
-    { id: 'APP-003', name: 'Telecom Spectrum License', authority: 'Communications Authority', status: ApprovalStatus.Submitted, submitted: getRelativeDate({ days: -10 }), approved: null },
-    { id: 'APP-004', name: 'Construction Safety Plan', authority: 'Occupational Safety Board', status: ApprovalStatus.Rejected, submitted: getRelativeDate({ days: -30 }), approved: null },
+    { 
+        id: 'APP-001', 
+        name: 'Environmental Impact Assessment', 
+        authority: 'Ministry of Environment', 
+        status: ApprovalStatus.Approved, 
+        submitted: getRelativeDate({ days: -80 }), 
+        approved: getRelativeDate({ days: -20 }),
+        history: [
+            { timestamp: getRelativeTimestamp({ days: -80 }), status: ApprovalStatus.Submitted, notes: 'Initial submission package sent.', operator: 'Project Manager' },
+            { timestamp: getRelativeTimestamp({ days: -50 }), status: ApprovalStatus.Pending, notes: 'Authority requested additional geological survey data.', operator: 'System' },
+            { timestamp: getRelativeTimestamp({ days: -45 }), status: ApprovalStatus.Submitted, notes: 'Additional data submitted.', operator: 'Project Manager' },
+            { timestamp: getRelativeTimestamp({ days: -20 }), status: ApprovalStatus.Approved, notes: 'Full approval granted with minor conditions.', operator: 'System' },
+        ],
+        documents: [
+            { id: 'DOC-001', name: 'EIA_Submission_Package.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -80 }) },
+            { id: 'DOC-002', name: 'Geological_Survey_Addendum.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -45 }) },
+            { id: 'DOC-003', name: 'Final_Approval_Certificate.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -20 }) },
+        ]
+    },
+    { 
+        id: 'APP-002', 
+        name: 'Right-of-Way Permit', 
+        authority: 'National Land Authority', 
+        status: ApprovalStatus.Pending, 
+        submitted: getRelativeDate({ days: -40 }), 
+        approved: null,
+        history: [
+            { timestamp: getRelativeTimestamp({ days: -40 }), status: ApprovalStatus.Submitted, notes: 'Submitted for review.', operator: 'Project Manager' },
+            { timestamp: getRelativeTimestamp({ days: -15 }), status: ApprovalStatus.Pending, notes: 'Currently under final review by the land authority committee.', operator: 'System' },
+        ],
+        documents: [
+            { id: 'DOC-004', name: 'RightOfWay_Application.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -40 }) },
+        ]
+    },
+    { 
+        id: 'APP-003', 
+        name: 'Telecom Spectrum License', 
+        authority: 'Communications Authority', 
+        status: ApprovalStatus.Submitted, 
+        submitted: getRelativeDate({ days: -10 }), 
+        approved: null,
+        history: [
+            { timestamp: getRelativeTimestamp({ days: -10 }), status: ApprovalStatus.Submitted, notes: 'Application filed.', operator: 'Project Manager' },
+        ],
+        documents: []
+    },
+    { 
+        id: 'APP-004', 
+        name: 'Construction Safety Plan', 
+        authority: 'Occupational Safety Board', 
+        status: ApprovalStatus.Rejected, 
+        submitted: getRelativeDate({ days: -30 }), 
+        approved: null,
+        history: [
+            { timestamp: getRelativeTimestamp({ days: -30 }), status: ApprovalStatus.Submitted, notes: 'Safety plan submitted.', operator: 'Project Manager' },
+            { timestamp: getRelativeTimestamp({ days: -5 }), status: ApprovalStatus.Rejected, notes: 'Plan rejected. Section 4.2 regarding on-site emergency response is insufficient. Resubmission required.', operator: 'System' },
+        ],
+        documents: [
+            { id: 'DOC-005', name: 'Safety_Plan_v1.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -30 }) },
+            { id: 'DOC-006', name: 'Rejection_Notice.pdf', type: 'PDF', url: '#', uploadedAt: getRelativeTimestamp({ days: -5 }) },
+        ]
+    },
 ];
 
 export const QA_CHECKS: QACheck[] = [
