@@ -2,10 +2,10 @@ import React from 'react';
 import { SENSORS } from '../constants';
 
 const deploymentLog = [
-    { id: 'DL-001', sensorId: 'P-VIB-001', team: 'Alpha', date: '2024-07-25', status: 'Completed' },
-    { id: 'DL-002', sensorId: 'P-VIB-002', team: 'Alpha', date: '2024-07-25', status: 'Completed' },
-    { id: 'DL-003', sensorId: 'P-VIB-004', team: 'Bravo', date: '2024-07-26', status: 'Pending QA' },
-    { id: 'DL-004', sensorId: 'P-VIB-005', team: 'Bravo', date: '2024-07-27', status: 'In Progress' },
+    { id: 'DL-001', sensorId: 'P-VIB-001', team: 'Alpha', date: '2025-09-02', status: 'Completed' },
+    { id: 'DL-002', sensorId: 'P-VIB-002', team: 'Alpha', date: '2025-09-03', status: 'Completed' },
+    { id: 'DL-003', sensorId: 'P-VIB-004', team: 'Bravo', date: '2025-09-04', status: 'Pending QA' },
+    { id: 'DL-004', sensorId: 'P-VIB-005', team: 'Bravo', date: '2025-09-06', status: 'In Progress' },
 ];
 
 const ImplementationView: React.FC = () => {

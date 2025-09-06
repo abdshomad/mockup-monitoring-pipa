@@ -91,6 +91,7 @@ export interface Alert {
     segment: string;
   };
   history?: AlertAction[];
+  resolutionNotes?: string;
 }
 
 export interface ChartDataPoint {

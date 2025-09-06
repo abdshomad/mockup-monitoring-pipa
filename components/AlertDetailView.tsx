@@ -1,10 +1,13 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { ALERT_DETAILS } from '../constants/alert-details';
 import { ICONS } from '../constants';
 import { Alert, AlertSeverity, AlertWorkflowStage, AlertAction } from '../types';
 import KanbanView from './alert-workflow/KanbanView';
 import TimelineView from './alert-workflow/TimelineView';
+import ResolutionModal from './ResolutionModal';
+import AIIncidentReportModal from './AIIncidentReportModal';
 
 interface AlertDetailViewProps {
   alert: Alert | undefined;
@@ -41,6 +44,9 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
   const [currentAlert, setCurrentAlert] = useState(alert);
   const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<AlertDetailTab>('details');
+  const [isResolutionModalOpen, setIsResolutionModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [alertForReport, setAlertForReport] = useState<Alert | null>(null);
 
   useEffect(() => {
     setCurrentAlert(alert);
@@ -62,10 +68,14 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
 
   const handleStageChange = (newStage: AlertWorkflowStage) => {
     if (currentAlert && currentAlert.stage !== newStage) {
+      if (newStage === AlertWorkflowStage.Resolved) {
+        setIsResolutionModalOpen(true);
+        return;
+      }
       const newAction: AlertAction = {
         timestamp: getFormattedTimestamp(),
         action: `Moved to ${newStage}`,
-        operator: 'Operator 1', // Mock operator
+        operator: 'Operator 1',
       };
       setCurrentAlert({
         ...currentAlert,
@@ -74,6 +84,29 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
       });
     }
   };
+  
+  const handleConfirmResolution = (notes: string) => {
+    if (!currentAlert) return;
+    
+    const newAction: AlertAction = {
+        timestamp: getFormattedTimestamp(),
+        action: `Moved to Resolved`,
+        operator: 'Operator 1',
+    };
+    
+    const resolvedAlert: Alert = {
+        ...currentAlert,
+        stage: AlertWorkflowStage.Resolved,
+        history: [...(currentAlert.history || []), newAction],
+        resolutionNotes: notes,
+    };
+    
+    setCurrentAlert(resolvedAlert);
+    setAlertForReport(resolvedAlert);
+    setIsResolutionModalOpen(false);
+    setIsReportModalOpen(true);
+  };
+
 
   if (!currentAlert) {
     return (
@@ -127,42 +160,54 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
 
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-            <h2 className="text-2xl font-bold text-white">Alert Details: <span className="text-cyan-400">{currentAlert.id}</span></h2>
-            <p className="text-slate-400">{currentAlert.type}</p>
+    <>
+      <ResolutionModal 
+        isOpen={isResolutionModalOpen}
+        onClose={() => setIsResolutionModalOpen(false)}
+        onConfirm={handleConfirmResolution}
+      />
+      <AIIncidentReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        alert={alertForReport}
+      />
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+              <h2 className="text-2xl font-bold text-white">Alert Details: <span className="text-cyan-400">{currentAlert.id}</span></h2>
+              <p className="text-slate-400">{currentAlert.type}</p>
+          </div>
+          <div className="flex items-center space-x-4">
+              <button onClick={onBack} className="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors">
+                  &larr; Back to Alerts Log
+              </button>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-            <button onClick={onBack} className="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors">
-                &larr; Back to Alerts Log
-            </button>
+
+        <div className="border-b border-slate-700 mb-4">
+            <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                {(['details', 'timeline', 'kanban'] as AlertDetailTab[]).map((tab) => (
+                    <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`${
+                            activeTab === tab
+                                ? 'border-cyan-400 text-cyan-400'
+                                : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'
+                        } whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
+                    >
+                        {tab}
+                    </button>
+                ))}
+            </nav>
         </div>
-      </div>
 
-      <div className="border-b border-slate-700 mb-4">
-          <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-              {(['details', 'timeline', 'kanban'] as AlertDetailTab[]).map((tab) => (
-                  <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`${
-                          activeTab === tab
-                              ? 'border-cyan-400 text-cyan-400'
-                              : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-300'
-                      } whitespace-nowrap capitalize py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
-                  >
-                      {tab}
-                  </button>
-              ))}
-          </nav>
-      </div>
+        <div className="animate-fade-in">
+          {renderContent()}
+        </div>
 
-      <div className="animate-fade-in">
-        {renderContent()}
       </div>
-
-    </div>
+    </>
   );
 };
 
