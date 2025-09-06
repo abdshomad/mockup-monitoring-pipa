@@ -10,3 +10,4 @@ export * from './data/visualData';
 export * from './data/timeSeriesData';
 export * from './data/historicalData';
 export * from './data/deployments';
+export * from './data/lorawan';

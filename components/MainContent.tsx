@@ -26,6 +26,7 @@ import NotificationsView from './NotificationsView';
 import SystemConfigView from './SystemConfigView';
 import AlertDetailView from './AlertDetailView';
 import IncidentDetailView from './IncidentDetailView';
+import LoraWANView from './LoraWANView';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard, 'Alerts': AlertsView, 'Incident Log': IncidentLogView, 'Sensors': SensorsView,
@@ -35,7 +36,7 @@ const viewComponents: Record<View, React.FC<any>> = {
   'Commissioning': CommissioningView, 'Asset Management': AssetManagementView,
   'System Health': SystemHealthView, 'Alert History': AlertHistoryView,
   'Technician Performance': TechnicianPerformanceView, 'User Profile': UserProfileView,
-  'Notifications': NotificationsView, 'System Config': SystemConfigView,
+  'Notifications': NotificationsView, 'System Config': SystemConfigView, 'LoRaWAN Network': LoraWANView,
 };
 
 type MainContentProps = ReturnType<typeof useAppController>;

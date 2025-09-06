@@ -5,7 +5,7 @@ import {
   MapPin, AlertTriangle, CheckCircle2, Activity, TrendingUp, TrendingDown,
   Shield, Search, Eye, FileText, HelpCircle, ListChecks, Paperclip, File,
   Sparkles, Send, X, Clipboard, PlayCircle, PauseCircle, Rewind,
-  FastForward, Zap, ShieldCheck, Siren, KanbanSquare
+  FastForward, Zap, ShieldCheck, Siren, KanbanSquare, Signal
 } from 'lucide-react';
 
 export const ICONS = {
@@ -59,4 +59,5 @@ export const ICONS = {
   predictiveMaintenance: <Wrench className="h-6 w-6" />,
   operationalEfficiency: <Zap className="h-6 w-6" />,
   riskAssessment: <ShieldCheck className="h-6 w-6" />,
+  lorawan: <Signal />,
 };

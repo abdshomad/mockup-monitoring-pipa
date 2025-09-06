@@ -20,6 +20,7 @@ export type View =
   | 'System Health'
   | 'Alert History'
   | 'Technician Performance'
+  | 'LoRaWAN Network'
   // System
   | 'User Profile'
   | 'Notifications'

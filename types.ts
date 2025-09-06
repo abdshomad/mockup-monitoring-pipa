@@ -6,3 +6,4 @@ export * from './types/maintenance';
 export * from './types/project';
 export * from './types/shared';
 export * from './types/analytics';
+export * from './types/lorawan';

@@ -1,4 +1,4 @@
-import { AlertSeverity, AlertWorkflowStage, IncidentStatus, FollowUpTaskStatus, MaintenanceStatus } from '../types';
+import { AlertSeverity, AlertWorkflowStage, IncidentStatus, FollowUpTaskStatus, MaintenanceStatus, LoraWANDeviceStatus, LoraWANGatewayStatus } from '../types';
 
 export const getSeverityBadgeClass = (severity: AlertSeverity) => {
     switch (severity) {
@@ -56,6 +56,23 @@ export const getMaintenanceStatusBadgeClass = (status: MaintenanceStatus) => {
         case MaintenanceStatus.Scheduled: return 'bg-cyan-500/20 text-cyan-400';
         case MaintenanceStatus.InProgress: return 'bg-yellow-500/20 text-yellow-400';
         case MaintenanceStatus.Completed: return 'bg-green-500/20 text-green-400';
+        default: return 'bg-slate-500/20 text-slate-400';
+    }
+};
+
+export const getLoraDeviceStatusBadgeClass = (status: LoraWANDeviceStatus) => {
+    switch (status) {
+        case LoraWANDeviceStatus.Online: return 'bg-green-500/20 text-green-400';
+        case LoraWANDeviceStatus.Offline: return 'bg-red-500/20 text-red-400';
+        case LoraWANDeviceStatus.LowBattery: return 'bg-yellow-500/20 text-yellow-400';
+        default: return 'bg-slate-500/20 text-slate-400';
+    }
+};
+
+export const getLoraGatewayStatusBadgeClass = (status: LoraWANGatewayStatus) => {
+    switch (status) {
+        case LoraWANGatewayStatus.Online: return 'bg-green-500/20 text-green-400';
+        case LoraWANGatewayStatus.Offline: return 'bg-red-500/20 text-red-400';
         default: return 'bg-slate-500/20 text-slate-400';
     }
 };
