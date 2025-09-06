@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -6,7 +7,7 @@ import AlertsView from './components/AlertsView';
 import SensorsView from './components/SensorsView';
 import MaintenanceView from './components/MaintenanceView';
 import PlanningView from './components/PlanningView';
-import { SensorType, AlertStatus, View } from './types';
+import { SensorType, View, AlertWorkflowStage } from './types';
 import { ALERTS } from './constants';
 import MapView from './components/MapView';
 import SiteSurveyView from './components/SiteSurveyView';
@@ -22,6 +23,7 @@ import TechnicianPerformanceView from './components/TechnicianPerformanceView';
 import UserProfileView from './components/UserProfileView';
 import NotificationsView from './components/NotificationsView';
 import SystemConfigView from './components/SystemConfigView';
+import AIPriorityTasksModal from './components/AIPriorityTasksModal';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
@@ -48,13 +50,14 @@ const viewComponents: Record<View, React.FC<any>> = {
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
+  const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
 
   const handleSetCurrentView = (view: View, type: SensorType | null = null) => {
     setCurrentView(view);
     setSensorFilter(view === 'Sensors' ? type : null);
   };
 
-  const activeAlertsCount = ALERTS.filter(a => a.status !== AlertStatus.Resolved).length;
+  const activeAlertsCount = ALERTS.filter(a => a.stage !== AlertWorkflowStage.Resolved).length;
 
   // FIX: Explicitly handle rendering for components that require props to satisfy
   // TypeScript's type checking for dynamic components.
@@ -62,19 +65,27 @@ const App: React.FC = () => {
     if (currentView === 'Sensors') {
       return <SensorsView sensorFilter={sensorFilter} />;
     }
+    if (currentView === 'Dashboard') {
+        return <Dashboard setCurrentView={handleSetCurrentView} />;
+    }
     const Component = viewComponents[currentView] || Dashboard;
     return <Component />;
   };
 
   return (
     <div className="flex h-screen bg-slate-900 font-sans">
+      <AIPriorityTasksModal isOpen={isPriorityModalOpen} onClose={() => setIsPriorityModalOpen(false)} />
       <Sidebar 
         currentView={currentView} 
         setCurrentView={handleSetCurrentView}
         sensorFilter={sensorFilter} 
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header currentView={currentView} activeAlertsCount={activeAlertsCount} />
+        <Header 
+            currentView={currentView} 
+            activeAlertsCount={activeAlertsCount}
+            onShowPriorityTasks={() => setIsPriorityModalOpen(true)}
+        />
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-slate-900 p-4 sm:p-6 lg:p-8">
           {renderView()}
         </main>

@@ -1,4 +1,5 @@
-import { Sensor, Alert, SensorStatus, AlertSeverity, AlertStatus, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus, Asset, Technician } from '../../types';
+
+import { Sensor, Alert, SensorStatus, AlertSeverity, AlertWorkflowStage, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus, Asset, Technician, AIInsight } from '../../types';
 
 export const SENSORS: Sensor[] = [
   { id: 'P-VIB-001', type: SensorType.VibrationPressure, location: { lat: 34.0522, lng: -118.2437, segment: 'Red Line' }, status: SensorStatus.Online, powerLevel: 92, lastSeen: '2024-07-31 10:00:00', vibration: 0.02, pressure: 502 },
@@ -12,11 +13,80 @@ export const SENSORS: Sensor[] = [
 ];
 
 export const ALERTS: Alert[] = [
-  { id: 'A-98721', timestamp: '2024-07-31 10:00:05', sensorId: 'P-VIB-002', type: 'Anomalous Vibration Detected', severity: AlertSeverity.Critical, status: AlertStatus.InProgress, location: { segment: 'Alpha-2' } },
-  { id: 'A-98720', timestamp: '2024-07-31 09:55:15', sensorId: 'P-VIB-006', type: 'Sudden Pressure Drop', severity: AlertSeverity.High, status: AlertStatus.Acknowledged, location: { segment: 'Bravo-3' } },
-  { id: 'A-98719', timestamp: '2024-07-31 09:45:30', sensorId: 'P-VIB-008', type: 'Low Power Warning', severity: AlertSeverity.Medium, status: AlertStatus.InProgress, location: { segment: 'Charlie-2' } },
-  { id: 'A-98718', timestamp: '2024-07-30 14:12:00', sensorId: 'P-VIB-001', type: 'Minor Fluctuation', severity: AlertSeverity.Low, status: AlertStatus.Resolved, location: { segment: 'Alpha-1' } },
-  { id: 'A-98717', timestamp: '2024-07-30 11:05:00', sensorId: 'P-VIB-005', type: 'Communication Timeout', severity: AlertSeverity.Medium, status: AlertStatus.Resolved, location: { segment: 'Bravo-2' } },
+  { 
+    id: 'A-98721', 
+    timestamp: '2024-07-31 10:00:05', 
+    sensorId: 'P-VIB-002', 
+    type: 'Anomalous Vibration Detected', 
+    severity: AlertSeverity.Critical, 
+    stage: AlertWorkflowStage.Dispatched, 
+    location: { segment: 'Alpha-2' },
+    history: [
+      { timestamp: '2024-07-31 10:00:05', action: 'Alert Triggered', operator: 'System' },
+      { timestamp: '2024-07-31 10:00:10', action: 'Moved to Triage', operator: 'System' },
+      { timestamp: '2024-07-31 10:01:15', action: 'AI Analysis Completed', operator: 'System' },
+      { timestamp: '2024-07-31 10:02:00', action: 'Moved to Investigating', operator: 'Operator 1' },
+      { timestamp: '2024-07-31 10:05:00', action: 'Moved to Dispatched', operator: 'Auto-Dispatch' },
+    ]
+  },
+  { 
+    id: 'A-98720', 
+    timestamp: '2024-07-31 09:55:15', 
+    sensorId: 'P-VIB-006', 
+    type: 'Sudden Pressure Drop', 
+    severity: AlertSeverity.High, 
+    stage: AlertWorkflowStage.Investigating, 
+    location: { segment: 'Bravo-3' },
+    history: [
+      { timestamp: '2024-07-31 09:55:15', action: 'Alert Triggered', operator: 'System' },
+      { timestamp: '2024-07-31 09:55:20', action: 'Moved to Triage', operator: 'System' },
+      { timestamp: '2024-07-31 09:56:00', action: 'Moved to Investigating', operator: 'Operator 1' },
+    ]
+  },
+  { 
+    id: 'A-98719', 
+    timestamp: '2024-07-31 09:45:30', 
+    sensorId: 'P-VIB-008', 
+    type: 'Low Power Warning', 
+    severity: AlertSeverity.Medium, 
+    stage: AlertWorkflowStage.Triage, 
+    location: { segment: 'Charlie-2' },
+    history: [
+      { timestamp: '2024-07-31 09:45:30', action: 'Alert Triggered', operator: 'System' },
+      { timestamp: '2024-07-31 09:45:35', action: 'Moved to Triage', operator: 'System' },
+    ]
+  },
+  { 
+    id: 'A-98718', 
+    timestamp: '2024-07-30 14:12:00', 
+    sensorId: 'P-VIB-001', 
+    type: 'Minor Fluctuation', 
+    severity: AlertSeverity.Low, 
+    stage: AlertWorkflowStage.Resolved, 
+    location: { segment: 'Alpha-1' },
+    history: [
+      { timestamp: '2024-07-30 14:12:00', action: 'Alert Triggered', operator: 'System' },
+      { timestamp: '2024-07-30 14:12:05', action: 'Moved to Triage', operator: 'System' },
+      { timestamp: '2024-07-30 14:13:00', action: 'Moved to Investigating', operator: 'Operator 2' },
+      { timestamp: '2024-07-30 14:25:00', action: 'Moved to Resolved', operator: 'Operator 2' },
+    ]
+  },
+  { 
+    id: 'A-98717', 
+    timestamp: '2024-07-30 11:05:00', 
+    sensorId: 'P-VIB-005', 
+    type: 'Communication Timeout', 
+    severity: AlertSeverity.Medium, 
+    stage: AlertWorkflowStage.Resolved, 
+    location: { segment: 'Bravo-2' },
+    history: [
+      { timestamp: '2024-07-30 11:05:00', action: 'Alert Triggered', operator: 'System' },
+      { timestamp: '2024-07-30 11:05:05', action: 'Moved to Triage', operator: 'System' },
+      { timestamp: '2024-07-30 11:06:00', action: 'Moved to Investigating', operator: 'Operator 1' },
+      { timestamp: '2024-07-30 11:15:00', action: 'Moved to Resolving', operator: 'Tech Team' },
+      { timestamp: '2024-07-30 11:30:00', action: 'Moved to Resolved', operator: 'Tech Team' },
+    ]
+  },
 ];
 
 export const RUNNING_ALERTS: RunningAlert[] = [
@@ -47,4 +117,28 @@ export const TECHNICIANS: Technician[] = [
   { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 } },
   { id: 'T-002', name: 'Bob Williams', team: 'Bravo', stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 } },
   { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 } },
+];
+
+export const AI_INSIGHTS: AIInsight[] = [
+  {
+    id: 'ai-1',
+    category: 'Predictive Maintenance',
+    title: 'Sensor P-VIB-008 Power Degradation',
+    insight: 'Power level for P-VIB-008 is trending down 5% faster than model predictions. Recommend scheduling battery inspection within the next 14 days to prevent unplanned downtime.',
+    icon: 'predictiveMaintenance',
+  },
+  {
+    id: 'ai-2',
+    category: 'Operational Efficiency',
+    title: 'Pressure Stabilization Opportunity',
+    insight: 'Minor pressure fluctuations in the Green Line correlate with pump station startups. Adjusting the ramp-up sequence could improve flow consistency by up to 3%.',
+    icon: 'operationalEfficiency',
+  },
+  {
+    id: 'ai-3',
+    category: 'Risk Assessment',
+    title: 'Increased Vibration in Interchange',
+    insight: 'The recent alert on P-VIB-002 is part of a pattern of increased low-level vibration over the past 48 hours. This elevates the risk score for the Interchange segment by 15%.',
+    icon: 'riskAssessment',
+  },
 ];

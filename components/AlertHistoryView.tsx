@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ALERTS } from '../constants';
 import { Alert, AlertSeverity } from '../types';
@@ -79,7 +80,8 @@ const AlertHistoryView: React.FC = () => {
                                 <th scope="col" className="px-6 py-3">Sensor ID</th>
                                 <th scope="col" className="px-6 py-3">Type</th>
                                 <th scope="col" className="px-6 py-3">Severity</th>
-                                <th scope="col" className="px-6 py-3">Status</th>
+                                {/* FIX: The table header should be 'Stage' to match the data property. */}
+                                <th scope="col" className="px-6 py-3">Stage</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,7 +94,8 @@ const AlertHistoryView: React.FC = () => {
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getSeverityBadgeClass(alert.severity)}`}>{alert.severity}</span>
                                     </td>
-                                     <td className="px-6 py-4">{alert.status}</td>
+                                     {/* FIX: The 'Alert' type does not have a 'status' property. Use 'stage' instead. */}
+                                     <td className="px-6 py-4">{alert.stage}</td>
                                 </tr>
                             ))}
                         </tbody>

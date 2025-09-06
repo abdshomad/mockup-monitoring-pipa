@@ -1,5 +1,7 @@
+
 import React, { useState, useMemo } from 'react';
-import { Sensor, AlertStatus, AlertSeverity } from '../types';
+// FIX: The 'AlertStatus' type is not exported; 'AlertWorkflowStage' should be used instead.
+import { Sensor, AlertSeverity, AlertWorkflowStage } from '../types';
 import { ALERTS, STATION_POSITIONS, TRANSPORT_LINES } from '../constants';
 import StationMarker from './pipeline/StationMarker';
 import Tooltip from './pipeline/Tooltip';
@@ -13,7 +15,8 @@ const PipelineDigitalTwin: React.FC<PipelineDigitalTwinProps> = ({ sensors }) =>
     const [hoveredSensor, setHoveredSensor] = useState<Sensor | null>(null);
 
     const heatmapPoints = useMemo(() => {
-        const activeAlerts = ALERTS.filter(alert => alert.status !== AlertStatus.Resolved);
+        // FIX: The 'Alert' type does not have a 'status' property. Use 'stage' instead.
+        const activeAlerts = ALERTS.filter(alert => alert.stage !== AlertWorkflowStage.Resolved);
 
         const alertsBySensor = activeAlerts.reduce((acc, alert) => {
             if (!acc[alert.sensorId]) {

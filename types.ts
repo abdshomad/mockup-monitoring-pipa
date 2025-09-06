@@ -13,10 +13,12 @@ export enum AlertSeverity {
   Low = 'Low',
 }
 
-export enum AlertStatus {
-  New = 'New',
-  Acknowledged = 'Acknowledged',
-  InProgress = 'In Progress',
+export enum AlertWorkflowStage {
+  Triage = 'Triage',
+  Investigating = 'Investigating',
+  Dispatched = 'Dispatched',
+  OnSite = 'On-Site',
+  Resolving = 'Resolving',
   Resolved = 'Resolved',
 }
 
@@ -72,16 +74,23 @@ export interface Sensor {
   type: SensorType;
 }
 
+export interface AlertAction {
+  timestamp: string;
+  action: string;
+  operator: string;
+}
+
 export interface Alert {
-  id: string;
+  id:string;
   timestamp: string;
   sensorId: string;
   type: string;
   severity: AlertSeverity;
-  status: AlertStatus;
+  stage: AlertWorkflowStage;
   location: {
     segment: string;
   };
+  history?: AlertAction[];
 }
 
 export interface ChartDataPoint {
@@ -118,7 +127,7 @@ export interface Asset {
 }
 
 export interface Technician {
-  id: string;
+  id:string;
   name: string;
   team: string;
   stats: {
@@ -158,6 +167,14 @@ export interface CommissioningTask {
   task: string;
   status: 'Completed' | 'In Progress' | 'Not Started';
   responsibleTeam: string;
+}
+
+export interface AIInsight {
+  id: string;
+  category: 'Predictive Maintenance' | 'Operational Efficiency' | 'Risk Assessment';
+  title: string;
+  insight: string;
+  icon: 'predictiveMaintenance' | 'operationalEfficiency' | 'riskAssessment';
 }
 
 export type View = 

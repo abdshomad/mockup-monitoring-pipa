@@ -1,11 +1,12 @@
+
 import React, { useState } from 'react';
 import { ALERTS } from '../constants';
-import { Alert, AlertSeverity, AlertStatus } from '../types';
+import { Alert, AlertSeverity, AlertWorkflowStage } from '../types';
 import AlertDetailView from './AlertDetailView';
 
 const AlertsView: React.FC = () => {
     const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
-    const [statusFilter, setStatusFilter] = useState<AlertStatus | null>(null);
+    const [stageFilter, setStageFilter] = useState<AlertWorkflowStage | null>(null);
     
     const getSeverityBadgeClass = (severity: AlertSeverity) => {
         switch (severity) {
@@ -17,12 +18,14 @@ const AlertsView: React.FC = () => {
         }
     };
     
-    const getStatusBadgeClass = (status: AlertStatus) => {
-        switch (status) {
-            case AlertStatus.New: return 'bg-cyan-500/20 text-cyan-400';
-            case AlertStatus.Acknowledged: return 'bg-purple-500/20 text-purple-400';
-            case AlertStatus.InProgress: return 'bg-indigo-500/20 text-indigo-400';
-            case AlertStatus.Resolved: return 'bg-green-500/20 text-green-400';
+    const getStageBadgeClass = (stage: AlertWorkflowStage) => {
+        switch (stage) {
+            case AlertWorkflowStage.Triage: return 'bg-cyan-500/20 text-cyan-400';
+            case AlertWorkflowStage.Investigating: return 'bg-purple-500/20 text-purple-400';
+            case AlertWorkflowStage.Dispatched: return 'bg-indigo-500/20 text-indigo-400';
+            case AlertWorkflowStage.OnSite: return 'bg-blue-500/20 text-blue-400';
+            case AlertWorkflowStage.Resolving: return 'bg-yellow-500/20 text-yellow-400';
+            case AlertWorkflowStage.Resolved: return 'bg-green-500/20 text-green-400';
             default: return 'bg-slate-500/20 text-slate-400';
         }
     };
@@ -33,7 +36,7 @@ const AlertsView: React.FC = () => {
     }
 
     const filteredAlerts = ALERTS.filter(
-        (alert) => !statusFilter || alert.status === statusFilter
+        (alert) => !stageFilter || alert.stage === stageFilter
     );
 
     return (
@@ -41,28 +44,28 @@ const AlertsView: React.FC = () => {
             <h3 className="text-xl font-semibold mb-6 text-white">Alerts Log</h3>
 
             <div className="flex flex-wrap gap-2 items-center mb-6">
-                <span className="text-slate-400 font-medium mr-2">Filter by status:</span>
+                <span className="text-slate-400 font-medium mr-2">Filter by stage:</span>
                 <button
-                    onClick={() => setStatusFilter(null)}
+                    onClick={() => setStageFilter(null)}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-200 ${
-                        statusFilter === null
+                        stageFilter === null
                             ? 'bg-cyan-500 text-white shadow-md'
                             : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                     }`}
                 >
                     All
                 </button>
-                {Object.values(AlertStatus).map(status => (
+                {Object.values(AlertWorkflowStage).map(stage => (
                     <button
-                        key={status}
-                        onClick={() => setStatusFilter(status)}
+                        key={stage}
+                        onClick={() => setStageFilter(stage)}
                         className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-200 ${
-                            statusFilter === status
+                            stageFilter === stage
                                 ? 'bg-cyan-500 text-white shadow-md'
                                 : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                         }`}
                     >
-                        {status}
+                        {stage}
                     </button>
                 ))}
             </div>
@@ -76,7 +79,7 @@ const AlertsView: React.FC = () => {
                             <th scope="col" className="px-6 py-3">Sensor ID</th>
                             <th scope="col" className="px-6 py-3">Type</th>
                             <th scope="col" className="px-6 py-3">Severity</th>
-                            <th scope="col" className="px-6 py-3">Status</th>
+                            <th scope="col" className="px-6 py-3">Stage</th>
                             <th scope="col" className="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
@@ -94,8 +97,8 @@ const AlertsView: React.FC = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(alert.status)}`}>
-                                            {alert.status}
+                                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStageBadgeClass(alert.stage)}`}>
+                                            {alert.stage}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">

@@ -1,4 +1,5 @@
-import { Sensor, SensorStatus, Alert, AlertStatus, AlertSeverity } from '../types';
+
+import { Sensor, SensorStatus, Alert, AlertWorkflowStage, AlertSeverity } from '../types';
 
 /**
  * Calculates a health score for a sensor based on its status, power, readings, and associated alerts.
@@ -33,7 +34,7 @@ export const calculateHealthScore = (sensor: Sensor, alerts: Alert[]): number =>
     }
 
     // Alerts penalty for unresolved alerts linked to this sensor
-    const sensorAlerts = alerts.filter(a => a.sensorId === sensor.id && a.status !== AlertStatus.Resolved);
+    const sensorAlerts = alerts.filter(a => a.sensorId === sensor.id && a.stage !== AlertWorkflowStage.Resolved);
     sensorAlerts.forEach(alert => {
         switch (alert.severity) {
             case AlertSeverity.Critical:
