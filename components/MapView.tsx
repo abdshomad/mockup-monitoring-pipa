@@ -1,5 +1,6 @@
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import PipelineDigitalTwin from './PipelineDigitalTwin';
+import IndonesiaPipelineMap from './PipelineDigitalTwin';
 import { SENSORS, SENSOR_HISTORY, BASE_SENSORS, ALERTS } from '../constants';
 import TimeMachineControls from './TimeMachineControls';
 import { Sensor, TimelineEvent, Alert } from '../types';
@@ -158,14 +159,14 @@ const MapView: React.FC = () => {
         <div className="space-y-6 h-full flex flex-col">
             <TimeMachineAlertModal alert={focusedAlert} onClose={handleCloseAlertModal} />
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-white">Pipeline Map</h2>
+                <h2 className="text-2xl font-bold text-white">Peta Pipa Transmisi Cisem-1 & Pertagas</h2>
             </div>
             <div className="bg-slate-800 p-6 rounded-2xl shadow-lg flex-grow flex flex-col">
                 <p className="text-slate-300 mb-4 flex-shrink-0">
-                    This interactive map displays the pipeline network. Use the Time Machine controls below to scrub through the last 48 hours of sensor activity and analyze historical events.
+                    Peta interaktif ini menampilkan Jaringan Pipa Transmisi Cisem-1 dan integrasinya dengan Pipa Pertagas di Jawa Timur. Gunakan kontrol Time Machine di bawah untuk meninjau aktivitas sensor dan menganalisis peristiwa historis.
                 </p>
                 <div className="flex-grow bg-slate-700 rounded-lg overflow-hidden relative">
-                    <PipelineDigitalTwin sensors={displayedSensors} currentTime={displayedTime} />
+                    <IndonesiaPipelineMap sensors={displayedSensors} currentTime={displayedTime} />
                     <TimeMachineControls
                         startTime={timeRange.startTime}
                         endTime={timeRange.endTime}

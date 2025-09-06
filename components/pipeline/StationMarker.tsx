@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Sensor, SensorStatus } from '../../types';
-import { STATION_POSITIONS } from '../../constants';
+import { INDONESIA_MAP_POSITIONS } from '../../constants';
 
 interface StationMarkerProps {
     sensor: Sensor;
@@ -20,7 +21,7 @@ const getConnectionStatusColor = (status: SensorStatus) => {
 }
 
 const StationMarker: React.FC<StationMarkerProps> = ({ sensor, onHover }) => {
-    const position = STATION_POSITIONS[sensor.id];
+    const position = INDONESIA_MAP_POSITIONS[sensor.id];
     if (!position) return null;
     
     const color = getConnectionStatusColor(sensor.status);

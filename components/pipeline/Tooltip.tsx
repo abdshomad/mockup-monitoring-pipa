@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Sensor, SensorStatus } from '../../types';
-import { STATION_POSITIONS } from '../../constants';
+import { INDONESIA_MAP_POSITIONS } from '../../constants';
 
 interface TooltipProps {
     sensor: Sensor;
@@ -16,11 +17,11 @@ const getConnectionStatusColor = (status: SensorStatus) => {
 }
 
 const Tooltip: React.FC<TooltipProps> = ({ sensor }) => {
-    const position = STATION_POSITIONS[sensor.id];
+    const position = INDONESIA_MAP_POSITIONS[sensor.id];
     const tooltipWidth = 160;
     const tooltipHeight = 70;
-    const xOffset = position.x > 550 ? -(tooltipWidth + 15) : 15;
-    const yOffset = position.y > 200 ? -(tooltipHeight + 10) : 10;
+    const xOffset = position.x > 950 ? -(tooltipWidth + 15) : 15;
+    const yOffset = position.y > 500 ? -(tooltipHeight + 10) : 10;
     const statusColor = getConnectionStatusColor(sensor.status);
 
     return (

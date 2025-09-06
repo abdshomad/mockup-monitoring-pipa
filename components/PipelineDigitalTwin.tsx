@@ -1,18 +1,17 @@
 
-
 import React, { useState, useMemo } from 'react';
 import { Sensor, AlertSeverity, Alert } from '../types';
-import { ALERTS, STATION_POSITIONS, TRANSPORT_LINES } from '../constants';
+import { ALERTS, INDONESIA_MAP_POSITIONS } from '../constants';
 import StationMarker from './pipeline/StationMarker';
 import Tooltip from './pipeline/Tooltip';
-import Legend from './pipeline/Legend';
+import IndonesiaMapSvg from './pipeline/IndonesiaMapSvg';
 
-interface PipelineDigitalTwinProps {
+interface IndonesiaPipelineMapProps {
     sensors: Sensor[];
     currentTime: Date;
 }
 
-const PipelineDigitalTwin: React.FC<PipelineDigitalTwinProps> = ({ sensors, currentTime }) => {
+const IndonesiaPipelineMap: React.FC<IndonesiaPipelineMapProps> = ({ sensors, currentTime }) => {
     const [hoveredSensor, setHoveredSensor] = useState<Sensor | null>(null);
 
     const heatmapPoints = useMemo(() => {
@@ -43,7 +42,7 @@ const PipelineDigitalTwin: React.FC<PipelineDigitalTwinProps> = ({ sensors, curr
         }, {} as Record<string, Alert[]>);
 
         return Object.entries(alertsBySensor).map(([sensorId, alerts]) => {
-            const position = STATION_POSITIONS[sensorId];
+            const position = INDONESIA_MAP_POSITIONS[sensorId];
             if (!position) return null;
 
             const intensity = alerts.reduce((sum, alert) => {
@@ -66,25 +65,14 @@ const PipelineDigitalTwin: React.FC<PipelineDigitalTwinProps> = ({ sensors, curr
     }, [currentTime]);
 
     return (
-        <div className="w-full h-full bg-slate-700">
-            <svg width="100%" height="100%" viewBox="0 0 700 300">
+        <div className="relative w-full h-full bg-slate-700">
+            <IndonesiaMapSvg />
+            <svg width="100%" height="100%" viewBox="0 0 1195 625" className="absolute top-0 left-0">
                 <defs>
                     <filter id="heatmapBlur" x="-50%" y="-50%" width="200%" height="200%">
                         <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
                     </filter>
                 </defs>
-
-                {Object.values(TRANSPORT_LINES).map((line, index) => (
-                    <path
-                        key={index}
-                        d={line.path}
-                        stroke={line.color}
-                        strokeWidth="5"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
-                ))}
 
                 <g filter="url(#heatmapBlur)" className="pointer-events-none">
                     {heatmapPoints.map(point => {
@@ -105,12 +93,10 @@ const PipelineDigitalTwin: React.FC<PipelineDigitalTwinProps> = ({ sensors, curr
                     <StationMarker key={sensor.id} sensor={sensor} onHover={setHoveredSensor} />
                 ))}
 
-                <Legend />
-
                 {hoveredSensor && <Tooltip sensor={hoveredSensor} />}
             </svg>
         </div>
     );
 };
 
-export default PipelineDigitalTwin;
+export default IndonesiaPipelineMap;

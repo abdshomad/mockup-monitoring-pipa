@@ -1,5 +1,6 @@
+
 import React from 'react';
-import PipelineDigitalTwin from '../PipelineDigitalTwin';
+import IndonesiaPipelineMap from '../PipelineDigitalTwin';
 import { Sensor } from '../../types';
 
 interface DigitalTwinCardProps {
@@ -12,7 +13,7 @@ const DigitalTwinCard: React.FC<DigitalTwinCardProps> = ({ sensors }) => (
         <div className="aspect-video bg-slate-700 rounded-lg overflow-hidden relative">
             {/* FIX: The 'PipelineDigitalTwin' component requires a 'currentTime' prop to render alerts correctly.
                  This is now provided using a constant date consistent with the mock data timeline. */}
-            <PipelineDigitalTwin sensors={sensors} currentTime={new Date('2025-09-06T14:30:00Z')} />
+            <IndonesiaPipelineMap sensors={sensors} currentTime={new Date('2025-09-06T14:30:00Z')} />
         </div>
     </div>
 );
