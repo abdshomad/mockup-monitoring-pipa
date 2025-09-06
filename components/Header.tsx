@@ -1,6 +1,8 @@
 
+
 import React from 'react';
-import { View } from '../App';
+// FIX: The 'View' type is exported from '../types', not '../App'.
+import { View } from '../types';
 
 interface HeaderProps {
   currentView: View;

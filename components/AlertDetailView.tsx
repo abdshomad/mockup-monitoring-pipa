@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ALERT_DETAILS } from '../constants/alert-details';
 import { ICONS } from '../constants';
 import { Alert, AlertSeverity, AlertStatus } from '../types';
-import { useGeminiAnalysis, AIAnalysis } from '../hooks/useGeminiAnalysis';
 
 interface AlertDetailViewProps {
   alert: Alert | undefined;
@@ -29,26 +28,9 @@ const getStatusBadgeClass = (status: AlertStatus) => {
     }
 };
 
-const AILoader: React.FC = () => (
-    <div className="flex flex-col items-center justify-center text-center text-slate-400 p-8">
-        <svg className="animate-spin h-8 w-8 text-purple-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p className="font-semibold text-slate-300">Analyzing alert with Gemini...</p>
-        <p className="text-sm">This may take a moment.</p>
-    </div>
-);
-
 const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
   const details = alert ? ALERT_DETAILS[alert.type] : null;
-  const [analyze, { data: aiAnalysis, loading: isLoading, error }] = useGeminiAnalysis();
-
-  const handleAnalyze = () => {
-    if (alert) {
-        analyze(alert);
-    }
-  };
+  const aiAnalysis = details?.aiInsights;
 
   if (!alert) {
     return (
@@ -78,14 +60,6 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
           <div className="bg-slate-800 p-6 rounded-2xl shadow-lg">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold text-white">Summary</h3>
-                <button
-                    onClick={handleAnalyze}
-                    disabled={isLoading}
-                    className="flex items-center px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition-colors disabled:bg-purple-800/50 disabled:cursor-not-allowed shadow-md"
-                >
-                    {ICONS.ai}
-                    <span className="ml-2">{isLoading ? 'Analyzing...' : 'Analyze with AI'}</span>
-                </button>
             </div>
             <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center">
@@ -156,34 +130,30 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
                 No detailed information available for this alert type.
             </div>
           )}
-           {(isLoading || error || aiAnalysis) && (
-              <div className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-purple-500/30 animate-fade-in">
-                  {isLoading && <AILoader />}
-                  {error && <p className="text-center text-red-400">{error}</p>}
-                  {aiAnalysis && (
-                      <div className="space-y-4">
-                          <div className="flex items-center mb-3 text-purple-400">
-                                <span className="mr-3 h-6 w-6">{ICONS.ai}</span>
-                                <h3 className="font-semibold text-white text-lg">Gemini AI Analysis</h3>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-purple-300 mb-1">Summary</h4>
-                            <p className="text-sm text-slate-300 leading-relaxed">{aiAnalysis.summary}</p>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-purple-300 mb-2">Probable Causes</h4>
-                            <ul className="space-y-1.5 text-sm list-disc list-inside text-slate-300">
-                                {aiAnalysis.probableCauses.map((cause, i) => <li key={i}>{cause}</li>)}
-                            </ul>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-purple-300 mb-2">Recommended Actions</h4>
-                            <ul className="space-y-1.5 text-sm list-disc list-inside text-slate-300">
-                                {aiAnalysis.recommendedActions.map((action, i) => <li key={i}>{action}</li>)}
-                            </ul>
-                          </div>
+           {aiAnalysis && (
+              <div className="bg-slate-800 p-6 rounded-2xl border border-purple-500/30 animate-fade-in shadow-lg" style={{animationDelay: '300ms'}}>
+                  <div className="space-y-4">
+                      <div className="flex items-center mb-3 text-purple-400">
+                            <span className="mr-3 h-6 w-6">{ICONS.ai}</span>
+                            <h3 className="font-semibold text-white text-lg">Gemini AI Analysis</h3>
                       </div>
-                  )}
+                      <div>
+                        <h4 className="font-semibold text-purple-300 mb-1">Summary</h4>
+                        <p className="text-sm text-slate-300 leading-relaxed">{aiAnalysis.summary}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-purple-300 mb-2">Probable Causes</h4>
+                        <ul className="space-y-1.5 text-sm list-disc list-inside text-slate-300">
+                            {aiAnalysis.probableCauses.map((cause, i) => <li key={i}>{cause}</li>)}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-purple-300 mb-2">Recommended Actions</h4>
+                        <ul className="space-y-1.5 text-sm list-disc list-inside text-slate-300">
+                            {aiAnalysis.recommendedActions.map((action, i) => <li key={i}>{action}</li>)}
+                        </ul>
+                      </div>
+                  </div>
               </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View } from '../App';
+import { View } from '../types';
 import { ICONS } from '../constants';
 import { SensorType } from '../types';
 

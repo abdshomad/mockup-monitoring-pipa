@@ -6,7 +6,7 @@ import AlertsView from './components/AlertsView';
 import SensorsView from './components/SensorsView';
 import MaintenanceView from './components/MaintenanceView';
 import PlanningView from './components/PlanningView';
-import { SensorType, AlertStatus } from './types';
+import { SensorType, AlertStatus, View } from './types';
 import { ALERTS } from './constants';
 import MapView from './components/MapView';
 import SiteSurveyView from './components/SiteSurveyView';
@@ -22,32 +22,6 @@ import TechnicianPerformanceView from './components/TechnicianPerformanceView';
 import UserProfileView from './components/UserProfileView';
 import NotificationsView from './components/NotificationsView';
 import SystemConfigView from './components/SystemConfigView';
-
-export type View = 
-  | 'Dashboard' 
-  | 'Alerts' 
-  | 'Sensors' 
-  | 'Maintenance'
-  | 'Map View'
-  // Pre-Construction
-  | 'Planning'
-  | 'Site Survey'
-  | 'Design'
-  | 'Approvals'
-  // Construction
-  | 'Implementation'
-  | 'Quality Assurance'
-  | 'Commissioning'
-  // Maintenance
-  | 'Asset Management'
-  // Reporting
-  | 'System Health'
-  | 'Alert History'
-  | 'Technician Performance'
-  // System
-  | 'User Profile'
-  | 'Notifications'
-  | 'System Config';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
