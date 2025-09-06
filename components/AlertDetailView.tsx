@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ALERT_DETAILS } from '../constants/alert-details';
+import { ICONS } from '../constants';
 import { Alert, AlertSeverity, AlertStatus } from '../types';
-import { GoogleGenAI, Type } from '@google/genai';
+import { useGeminiAnalysis, AIAnalysis } from '../hooks/useGeminiAnalysis';
 
 interface AlertDetailViewProps {
   alert: Alert | undefined;
   onBack: () => void;
-}
-
-interface AIAnalysis {
-    summary: string;
-    probableCauses: string[];
-    recommendedActions: string[];
 }
 
 const getSeverityBadgeClass = (severity: AlertSeverity) => {
@@ -34,13 +29,6 @@ const getStatusBadgeClass = (status: AlertStatus) => {
     }
 };
 
-const ICONS = {
-    description: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
-    causes: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>,
-    actions: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-    ai: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.528l-.259-1.035a3.375 3.375 0 00-2.456-2.456L13.149 16.5l1.035-.259a3.375 3.375 0 002.456-2.456l.259-1.035.259 1.035a3.375 3.375 0 002.456 2.456l1.035.259-1.035.259a3.375 3.375 0 00-2.456 2.456l-.259 1.035z" /></svg>,
-};
-
 const AILoader: React.FC = () => (
     <div className="flex flex-col items-center justify-center text-center text-slate-400 p-8">
         <svg className="animate-spin h-8 w-8 text-purple-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -54,59 +42,13 @@ const AILoader: React.FC = () => (
 
 const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
   const details = alert ? ALERT_DETAILS[alert.type] : null;
+  const [analyze, { data: aiAnalysis, loading: isLoading, error }] = useGeminiAnalysis();
 
-  const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleAnalyze = async () => {
-    if (!alert) return;
-    setIsLoading(true);
-    setError(null);
-    setAiAnalysis(null);
-
-    try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        const prompt = `You are a pipeline integrity monitoring expert. Analyze the following alert and provide a summary, 3 probable causes, and 3 recommended actions.
-        Alert Details:
-        - Type: ${alert.type}
-        - Sensor ID: ${alert.sensorId}
-        - Severity: ${alert.severity}
-        - Timestamp: ${alert.timestamp}
-        - Segment: ${alert.location.segment}
-        
-        Return your analysis as a JSON object.`;
-
-        const responseSchema = {
-            type: Type.OBJECT,
-            properties: {
-                summary: { type: Type.STRING, description: "A concise summary of the situation and its potential impact." },
-                probableCauses: { type: Type.ARRAY, items: { type: Type.STRING }, description: "An array of the most likely causes for this alert." },
-                recommendedActions: { type: Type.ARRAY, items: { type: Type.STRING }, description: "An array of immediate, actionable steps to take." },
-            },
-            required: ["summary", "probableCauses", "recommendedActions"]
-        };
-
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema,
-            },
-        });
-
-        const analysisResult = JSON.parse(response.text);
-        setAiAnalysis(analysisResult);
-
-    } catch (e) {
-        console.error("AI Analysis Error:", e);
-        setError("Failed to get AI analysis. Please try again later.");
-    } finally {
-        setIsLoading(false);
+  const handleAnalyze = () => {
+    if (alert) {
+        analyze(alert);
     }
   };
-
 
   if (!alert) {
     return (

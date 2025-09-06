@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { View } from '../App';
 import { ICONS } from '../constants';
@@ -81,22 +79,46 @@ const ExpandableNavItem: React.FC<{
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, sensorFilter }) => {
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-
-  const toggleMenu = (menu: string) => {
-    setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }));
-  };
-
-  const menuConfig = {
+const menuConfig = {
     preConstruction: ['Planning', 'Site Survey', 'Design', 'Approvals'] as View[],
     construction: ['Implementation', 'Quality Assurance', 'Commissioning'] as View[],
     operations: ['Dashboard', 'Alerts', 'Sensors', 'Map View'] as View[],
     maintenance: ['Maintenance', 'Asset Management'] as View[],
     analysis: ['System Health', 'Alert History', 'Technician Performance'] as View[],
     system: ['User Profile', 'Notifications', 'System Config'] as View[],
-  };
+};
 
+type SidebarItem = 
+    | { type: 'header'; label: string }
+    | { type: 'item'; view: View; icon: JSX.Element; }
+    | { type: 'expandable'; label: string; icon: JSX.Element; views: View[]; menuKey: keyof typeof menuConfig; children: { view: View }[] }
+    | { type: 'sensors' };
+
+const sidebarConfig: SidebarItem[] = [
+    { type: 'header', label: 'Pre-Construction' },
+    { type: 'expandable', label: 'Planning', icon: ICONS.preConstruction, views: menuConfig.preConstruction, menuKey: 'preConstruction', children: [{ view: 'Planning' }, { view: 'Site Survey' }, { view: 'Design' }, { view: 'Approvals' }] },
+    { type: 'header', label: 'Construction' },
+    { type: 'expandable', label: 'Implementation', icon: ICONS.construction, views: menuConfig.construction, menuKey: 'construction', children: [{ view: 'Implementation' }, { view: 'Quality Assurance' }, { view: 'Commissioning' }] },
+    { type: 'header', label: 'Operations' },
+    { type: 'item', view: 'Dashboard', icon: ICONS.dashboard },
+    { type: 'item', view: 'Alerts', icon: ICONS.alerts },
+    { type: 'sensors' },
+    { type: 'item', view: 'Map View', icon: ICONS.map },
+    { type: 'header', label: 'Maintenance' },
+    { type: 'expandable', label: 'Maintenance', icon: ICONS.maintenance, views: menuConfig.maintenance, menuKey: 'maintenance', children: [{ view: 'Maintenance' }, { view: 'Asset Management' }] },
+    { type: 'header', label: 'Analysis & Reporting' },
+    { type: 'expandable', label: 'Reporting', icon: ICONS.reporting, views: menuConfig.analysis, menuKey: 'analysis', children: [{ view: 'System Health' }, { view: 'Alert History' }, { view: 'Technician Performance' }] },
+    { type: 'header', label: 'System' },
+    { type: 'expandable', label: 'Settings', icon: ICONS.settings, views: menuConfig.system, menuKey: 'system', children: [{ view: 'User Profile' }, { view: 'Notifications' }, { view: 'System Config' }] },
+];
+
+const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, sensorFilter }) => {
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+
+  const toggleMenu = (menu: string) => {
+    setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }));
+  };
+  
   useEffect(() => {
     const activeMenu = Object.keys(menuConfig).find(key => 
         menuConfig[key as keyof typeof menuConfig].includes(currentView)
@@ -118,57 +140,39 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, sensorFi
         </div>
         <nav>
           <ul className="space-y-2">
-             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">Pre-Construction</p>
-             <ExpandableNavItem label="Planning" icon={ICONS.preConstruction} views={menuConfig.preConstruction} currentView={currentView} isOpen={!!openMenus.preConstruction} toggle={() => toggleMenu('preConstruction')}>
-                <NavItem viewName="Planning" currentView={currentView} onClick={() => setCurrentView('Planning')} isSubItem={true} />
-                <NavItem viewName="Site Survey" currentView={currentView} onClick={() => setCurrentView('Site Survey')} isSubItem={true} />
-                <NavItem viewName="Design" currentView={currentView} onClick={() => setCurrentView('Design')} isSubItem={true} />
-                <NavItem viewName="Approvals" currentView={currentView} onClick={() => setCurrentView('Approvals')} isSubItem={true} />
-             </ExpandableNavItem>
-             
-             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">Construction</p>
-             <ExpandableNavItem label="Implementation" icon={ICONS.construction} views={menuConfig.construction} currentView={currentView} isOpen={!!openMenus.construction} toggle={() => toggleMenu('construction')}>
-                <NavItem viewName="Implementation" currentView={currentView} onClick={() => setCurrentView('Implementation')} isSubItem={true} />
-                <NavItem viewName="Quality Assurance" currentView={currentView} onClick={() => setCurrentView('Quality Assurance')} isSubItem={true} />
-                <NavItem viewName="Commissioning" currentView={currentView} onClick={() => setCurrentView('Commissioning')} isSubItem={true} />
-             </ExpandableNavItem>
-
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">Operations</p>
-            <NavItem viewName="Dashboard" icon={ICONS.dashboard} currentView={currentView} onClick={() => setCurrentView('Dashboard')} />
-            <NavItem viewName="Alerts" icon={ICONS.alerts} currentView={currentView} onClick={() => setCurrentView('Alerts')} />
-            <ExpandableNavItem label="Sensors" icon={ICONS.sensors} views={['Sensors']} currentView={currentView} isOpen={!!openMenus.sensors || currentView === 'Sensors'} toggle={() => {toggleMenu('sensors'); setCurrentView('Sensors', null)}}>
-                {Object.values(SensorType).map(type => {
-                    const isSubItemActive = currentView === 'Sensors' && sensorFilter === type;
-                    return (
-                        <li key={type} onClick={(e) => { e.stopPropagation(); setCurrentView('Sensors', type); }}
-                            className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm ${isSubItemActive ? 'bg-slate-700/50 text-cyan-400 font-semibold' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`}>
-                            <span className="w-6 h-6">{getSensorTypeIcon(type)}</span>
-                            <span className="ml-3">{type}</span>
-                        </li>
-                    );
-                })}
-            </ExpandableNavItem>
-            <NavItem viewName="Map View" icon={ICONS.map} currentView={currentView} onClick={() => setCurrentView('Map View')} />
-
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">Maintenance</p>
-             <ExpandableNavItem label="Maintenance" icon={ICONS.maintenance} views={menuConfig.maintenance} currentView={currentView} isOpen={!!openMenus.maintenance} toggle={() => toggleMenu('maintenance')}>
-                <NavItem viewName="Maintenance" currentView={currentView} onClick={() => setCurrentView('Maintenance')} isSubItem={true} />
-                <NavItem viewName="Asset Management" currentView={currentView} onClick={() => setCurrentView('Asset Management')} isSubItem={true} />
-             </ExpandableNavItem>
-
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">Analysis & Reporting</p>
-            <ExpandableNavItem label="Reporting" icon={ICONS.reporting} views={menuConfig.analysis} currentView={currentView} isOpen={!!openMenus.analysis} toggle={() => toggleMenu('analysis')}>
-                <NavItem viewName="System Health" currentView={currentView} onClick={() => setCurrentView('System Health')} isSubItem={true} />
-                <NavItem viewName="Alert History" currentView={currentView} onClick={() => setCurrentView('Alert History')} isSubItem={true} />
-                <NavItem viewName="Technician Performance" currentView={currentView} onClick={() => setCurrentView('Technician Performance')} isSubItem={true} />
-            </ExpandableNavItem>
-            
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mt-4 mb-1">System</p>
-            <ExpandableNavItem label="Settings" icon={ICONS.settings} views={menuConfig.system} currentView={currentView} isOpen={!!openMenus.system} toggle={() => toggleMenu('system')}>
-                <NavItem viewName="User Profile" currentView={currentView} onClick={() => setCurrentView('User Profile')} isSubItem={true} />
-                <NavItem viewName="Notifications" currentView={currentView} onClick={() => setCurrentView('Notifications')} isSubItem={true} />
-                <NavItem viewName="System Config" currentView={currentView} onClick={() => setCurrentView('System Config')} isSubItem={true} />
-            </ExpandableNavItem>
+            {sidebarConfig.map((item, index) => {
+                switch (item.type) {
+                    case 'header':
+                        return <p key={index} className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 pt-4 pb-1">{item.label}</p>;
+                    case 'item':
+                        return <NavItem key={item.view} viewName={item.view} icon={item.icon} currentView={currentView} onClick={() => setCurrentView(item.view)} />;
+                    case 'expandable':
+                        return (
+                            <ExpandableNavItem key={item.label} label={item.label} icon={item.icon} views={item.views} currentView={currentView} isOpen={!!openMenus[item.menuKey]} toggle={() => toggleMenu(item.menuKey)}>
+                                {item.children.map(child => (
+                                    <NavItem key={child.view} viewName={child.view} currentView={currentView} onClick={() => setCurrentView(child.view)} isSubItem={true} />
+                                ))}
+                            </ExpandableNavItem>
+                        );
+                    case 'sensors':
+                        return (
+                            <ExpandableNavItem key="sensors" label="Sensors" icon={ICONS.sensors} views={['Sensors']} currentView={currentView} isOpen={!!openMenus.sensors || currentView === 'Sensors'} toggle={() => {toggleMenu('sensors'); setCurrentView('Sensors', null)}}>
+                                {Object.values(SensorType).map(type => {
+                                    const isSubItemActive = currentView === 'Sensors' && sensorFilter === type;
+                                    return (
+                                        <li key={type} onClick={(e) => { e.stopPropagation(); setCurrentView('Sensors', type); }}
+                                            className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm ${isSubItemActive ? 'bg-slate-700/50 text-cyan-400 font-semibold' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`}>
+                                            <span className="w-6 h-6">{getSensorTypeIcon(type)}</span>
+                                            <span className="ml-3">{type}</span>
+                                        </li>
+                                    );
+                                })}
+                            </ExpandableNavItem>
+                        )
+                    default:
+                        return null;
+                }
+            })}
           </ul>
         </nav>
       </div>

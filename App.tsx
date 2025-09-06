@@ -49,6 +49,28 @@ export type View =
   | 'Notifications'
   | 'System Config';
 
+const viewComponents: Record<View, React.FC<any>> = {
+  'Dashboard': Dashboard,
+  'Alerts': AlertsView,
+  'Sensors': SensorsView,
+  'Maintenance': MaintenanceView,
+  'Map View': MapView,
+  'Planning': PlanningView,
+  'Site Survey': SiteSurveyView,
+  'Design': DesignView,
+  'Approvals': ApprovalsView,
+  'Implementation': ImplementationView,
+  'Quality Assurance': QualityAssuranceView,
+  'Commissioning': CommissioningView,
+  'Asset Management': AssetManagementView,
+  'System Health': SystemHealthView,
+  'Alert History': AlertHistoryView,
+  'Technician Performance': TechnicianPerformanceView,
+  'User Profile': UserProfileView,
+  'Notifications': NotificationsView,
+  'System Config': SystemConfigView,
+};
+
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
@@ -60,49 +82,14 @@ const App: React.FC = () => {
 
   const activeAlertsCount = ALERTS.filter(a => a.status !== AlertStatus.Resolved).length;
 
+  // FIX: Explicitly handle rendering for components that require props to satisfy
+  // TypeScript's type checking for dynamic components.
   const renderView = () => {
-    switch (currentView) {
-      case 'Dashboard':
-        return <Dashboard />;
-      case 'Alerts':
-        return <AlertsView />;
-      case 'Sensors':
-        return <SensorsView sensorFilter={sensorFilter} />;
-      case 'Maintenance':
-        return <MaintenanceView />;
-      case 'Planning':
-        return <PlanningView />;
-      case 'Map View':
-        return <MapView />;
-      case 'Site Survey':
-        return <SiteSurveyView />;
-      case 'Design':
-        return <DesignView />;
-      case 'Approvals':
-        return <ApprovalsView />;
-      case 'Implementation':
-        return <ImplementationView />;
-      case 'Quality Assurance':
-        return <QualityAssuranceView />;
-      case 'Commissioning':
-        return <CommissioningView />;
-      case 'Asset Management':
-        return <AssetManagementView />;
-      case 'System Health':
-        return <SystemHealthView />;
-      case 'Alert History':
-        return <AlertHistoryView />;
-      case 'Technician Performance':
-        return <TechnicianPerformanceView />;
-      case 'User Profile':
-        return <UserProfileView />;
-      case 'Notifications':
-        return <NotificationsView />;
-      case 'System Config':
-        return <SystemConfigView />;
-      default:
-        return <Dashboard />;
+    if (currentView === 'Sensors') {
+      return <SensorsView sensorFilter={sensorFilter} />;
     }
+    const Component = viewComponents[currentView] || Dashboard;
+    return <Component />;
   };
 
   return (
