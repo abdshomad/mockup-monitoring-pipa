@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { INCIDENTS, ALERTS, TECHNICIANS } from '../constants';
+import { TECHNICIANS } from '../constants';
 import { Incident, IncidentStatus, AlertSeverity, Alert } from '../types';
-import IncidentDetailView from './IncidentDetailView';
 import DeclareIncidentModal from './DeclareIncidentModal';
 import { getRelativeTimestamp } from '../utils/time';
 
-const IncidentLogView: React.FC = () => {
-    const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);
-    const [incidents, setIncidents] = useState<Incident[]>(INCIDENTS);
+interface IncidentLogViewProps {
+    incidents: Incident[];
+    onSelectIncident: (id: string) => void;
+    onDeclareIncident: (data: { title: string; severity: AlertSeverity; incidentCommander: string; summary: string }) => void;
+}
+
+
+const IncidentLogView: React.FC<IncidentLogViewProps> = ({ incidents, onSelectIncident, onDeclareIncident }) => {
     const [isDeclareModalOpen, setIsDeclareModalOpen] = useState(false);
 
     const getStatusBadgeClass = (status: IncidentStatus) => {
@@ -29,47 +33,18 @@ const IncidentLogView: React.FC = () => {
             default: return 'bg-slate-500/20 text-slate-400';
         }
     };
-    
-    const handleUpdateIncident = (updatedIncident: Incident) => {
-        setIncidents(prevIncidents =>
-            prevIncidents.map(inc =>
-                inc.id === updatedIncident.id ? updatedIncident : inc
-            )
-        );
-        setSelectedIncidentId(null); // Go back to list view
-    };
 
-    const handleDeclareIncident = (data: { title: string; severity: AlertSeverity; incidentCommander: string; summary: string }) => {
-        const newIncident: Incident = {
-            id: `INC-2025-00${incidents.length + 1}`,
-            title: data.title,
-            status: IncidentStatus.Active, // New incidents are always active
-            severity: data.severity,
-            startTime: getRelativeTimestamp({}),
-            endTime: null,
-            incidentCommander: data.incidentCommander,
-            summary: data.summary,
-            linkedAlertIds: [],
-            log: [
-                { timestamp: getRelativeTimestamp({}), entry: 'Incident declared by Operator 1.', operator: 'Operator 1' }
-            ],
-        };
-        setIncidents(prev => [newIncident, ...prev]);
+    const handleDeclareAndClose = (data: { title: string; severity: AlertSeverity; incidentCommander: string; summary: string }) => {
+        onDeclareIncident(data);
         setIsDeclareModalOpen(false);
     };
-
-    if (selectedIncidentId) {
-        const selectedIncident = incidents.find(i => i.id === selectedIncidentId);
-        const linkedAlerts = ALERTS.filter(a => selectedIncident?.linkedAlertIds.includes(a.id));
-        return <IncidentDetailView incident={selectedIncident} linkedAlerts={linkedAlerts} onBack={() => setSelectedIncidentId(null)} onUpdate={handleUpdateIncident} />;
-    }
 
     return (
         <>
             <DeclareIncidentModal
                 isOpen={isDeclareModalOpen}
                 onClose={() => setIsDeclareModalOpen(false)}
-                onDeclare={handleDeclareIncident}
+                onDeclare={handleDeclareAndClose}
                 technicians={TECHNICIANS}
             />
             <div className="bg-slate-800 p-6 rounded-2xl shadow-lg animate-fade-in">
@@ -111,7 +86,7 @@ const IncidentLogView: React.FC = () => {
                                     <td className="px-6 py-4">{incident.startTime}</td>
                                     <td className="px-6 py-4">{incident.incidentCommander}</td>
                                     <td className="px-6 py-4">
-                                        <button onClick={() => setSelectedIncidentId(incident.id)} className="font-medium text-cyan-400 hover:underline">Details</button>
+                                        <button onClick={() => onSelectIncident(incident.id)} className="font-medium text-cyan-400 hover:underline">Details</button>
                                     </td>
                                 </tr>
                             ))}

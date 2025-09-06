@@ -5,9 +5,10 @@ import { ICONS } from '../../constants';
 interface AlertDetailHeaderProps {
     alert: Alert;
     onBack: () => void;
+    onPromoteToIncident: (alert: Alert) => void;
 }
 
-const AlertDetailHeader: React.FC<AlertDetailHeaderProps> = ({ alert, onBack }) => {
+const AlertDetailHeader: React.FC<AlertDetailHeaderProps> = ({ alert, onBack, onPromoteToIncident }) => {
     return (
         <div className="flex justify-between items-center">
             <div>
@@ -17,7 +18,7 @@ const AlertDetailHeader: React.FC<AlertDetailHeaderProps> = ({ alert, onBack }) 
             <div className="flex items-center space-x-4">
                 {alert.stage !== AlertWorkflowStage.Resolved && (
                     <button 
-                        onClick={() => window.alert(`Alert ${alert.id} has been promoted to a new incident.`)}
+                        onClick={() => onPromoteToIncident(alert)}
                         className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2"
                     >
                         {React.cloneElement(ICONS.security, { className: 'h-5 w-5' })}

@@ -48,6 +48,11 @@ const suggestionsByView: Partial<Record<string, string[]>> = {
         'Are there any alerts in the Interchange segment?',
         'List all sensors and their locations.',
     ],
+    'Implementation': [
+        'Which sensor deployments are currently in progress?',
+        'What is the status of deployment DEP-005?',
+        'Show all deployments assigned to Team Alpha.',
+    ],
     'Asset Management': [
         'Which assets are currently in repair?',
         'Find the asset with serial number SN-183XYZ9.',

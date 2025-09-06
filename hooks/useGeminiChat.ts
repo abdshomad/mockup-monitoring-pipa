@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { GoogleGenAI, Chat } from '@google/genai';
-import { SENSORS, ALERTS, MAINTENANCE_SCHEDULE, TECHNICIANS } from '../constants';
+import { SENSORS, ALERTS, MAINTENANCE_SCHEDULE, TECHNICIANS, SENSOR_DEPLOYMENTS } from '../constants';
 
 // Initialize the AI client
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -19,12 +19,14 @@ const systemInstruction = `You are "Pipeline Guard AI", an expert assistant for 
 const getSystemContext = (): string => {
   // We remove the detailed history from alerts to save token space
   const alertsSummary = ALERTS.map(({ history, ...rest }) => rest);
+  const deploymentsSummary = SENSOR_DEPLOYMENTS.map(({ history, ...rest }) => rest);
 
   const context = {
     SENSORS,
     ALERTS: alertsSummary,
     MAINTENANCE_SCHEDULE,
     TECHNICIANS,
+    SENSOR_DEPLOYMENTS: deploymentsSummary,
     CURRENT_DATE: new Date().toISOString(), // Provide current date for context
   };
 

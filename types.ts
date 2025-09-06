@@ -269,6 +269,32 @@ export interface CommissioningTask {
   responsibleTeam: string;
 }
 
+export enum DeploymentStatus {
+    Planned = 'Planned',
+    AwaitingInstallation = 'Awaiting Installation',
+    InProgress = 'In Progress',
+    PendingQA = 'Pending QA',
+    Active = 'Active',
+}
+
+export interface DeploymentEvent {
+    timestamp: string;
+    status: DeploymentStatus;
+    notes: string;
+    operator: string;
+}
+
+export interface SensorDeployment {
+    id: string;
+    sensorId: string;
+    assetId: string;
+    currentStatus: DeploymentStatus;
+    segment: string;
+    scheduledDate: string;
+    assignedTeam: string;
+    history: DeploymentEvent[];
+}
+
 
 // --- AI & Charting Types ---
 

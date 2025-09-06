@@ -6,8 +6,8 @@ import AlertsView from './components/AlertsView';
 import SensorsView from './components/SensorsView';
 import MaintenanceView from './components/MaintenanceView';
 import PlanningView from './components/PlanningView';
-import { SensorType, View, AlertWorkflowStage } from './types';
-import { ALERTS, ICONS } from './constants';
+import { SensorType, View, AlertWorkflowStage, Incident, Alert, IncidentStatus, AlertSeverity } from './types';
+import { ALERTS, ICONS, INCIDENTS } from './constants';
 import MapView from './components/MapView';
 import SiteSurveyView from './components/SiteSurveyView';
 import DesignView from './components/DesignView';
@@ -27,6 +27,8 @@ import AIAssistant from './components/AIAssistant';
 import IncidentLogView from './components/IncidentLogView';
 import KanbanBoardView from './components/KanbanBoardView';
 import AlertDetailView from './components/AlertDetailView';
+import IncidentDetailView from './components/IncidentDetailView';
+import { getRelativeTimestamp } from './utils/time';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
@@ -56,21 +58,99 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
+  const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [incidents, setIncidents] = useState<Incident[]>(INCIDENTS);
 
   const handleSetCurrentView = (view: View, type: SensorType | null = null) => {
     setCurrentView(view);
     setSensorFilter(view === 'Sensors' ? type : null);
     setSelectedAlertId(null);
+    setSelectedIncidentId(null);
   };
+  
+  const handlePromoteToIncident = (alert: Alert) => {
+    const newIncident: Incident = {
+        id: `INC-2025-00${incidents.length + 1}`,
+        title: `Incident from Alert: ${alert.id}`,
+        status: IncidentStatus.Active,
+        severity: alert.severity,
+        startTime: getRelativeTimestamp({}),
+        endTime: null,
+        incidentCommander: 'TBD', // To be decided
+        summary: `Incident promoted from ${alert.severity} alert "${alert.type}" on sensor ${alert.sensorId}.`,
+        linkedAlertIds: [alert.id],
+        log: [
+            {
+                timestamp: getRelativeTimestamp({}),
+                entry: `Incident declared from Alert ${alert.id}.`,
+                operator: 'Operator 1',
+            },
+            ...alert.history?.map(h => ({ // Copy alert history to incident log
+                timestamp: h.timestamp,
+                entry: h.action,
+                operator: h.operator,
+                notes: h.notes,
+            })) || []
+        ],
+    };
+    setIncidents(prev => [newIncident, ...prev]);
+    setCurrentView('Incident Log');
+    setSelectedIncidentId(newIncident.id);
+    setSelectedAlertId(null);
+  };
+
+  const handleDeclareIncident = (data: { title: string; severity: AlertSeverity; incidentCommander: string; summary: string }) => {
+    const newIncident: Incident = {
+        id: `INC-2025-00${incidents.length + 1}`,
+        status: IncidentStatus.Active,
+        startTime: getRelativeTimestamp({}),
+        endTime: null,
+        linkedAlertIds: [],
+        log: [
+            { timestamp: getRelativeTimestamp({}), entry: 'Incident declared by Operator 1.', operator: 'Operator 1' }
+        ],
+        ...data
+    };
+    setIncidents(prev => [newIncident, ...prev]);
+    setSelectedIncidentId(newIncident.id);
+  };
+  
+  const handleUpdateIncident = (updatedIncident: Incident) => {
+    setIncidents(prevIncidents =>
+        prevIncidents.map(inc =>
+            inc.id === updatedIncident.id ? updatedIncident : inc
+        )
+    );
+    setSelectedIncidentId(null);
+  };
+
 
   const activeAlertsCount = ALERTS.filter(a => a.stage !== AlertWorkflowStage.Resolved).length;
 
   const renderView = () => {
     if (selectedAlertId) {
         const selectedAlert = ALERTS.find(a => a.id === selectedAlertId);
-        return <AlertDetailView alert={selectedAlert} onBack={() => setSelectedAlertId(null)} />;
+        return <AlertDetailView alert={selectedAlert} onBack={() => setSelectedAlertId(null)} onPromoteToIncident={handlePromoteToIncident} />;
+    }
+
+    if (currentView === 'Incident Log') {
+        if (selectedIncidentId) {
+            const selectedIncident = incidents.find(i => i.id === selectedIncidentId);
+            const linkedAlerts = ALERTS.filter(a => selectedIncident?.linkedAlertIds.includes(a.id));
+            return <IncidentDetailView 
+                        incident={selectedIncident} 
+                        linkedAlerts={linkedAlerts}
+                        onBack={() => setSelectedIncidentId(null)}
+                        onUpdate={handleUpdateIncident}
+                    />;
+        }
+        return <IncidentLogView 
+                    incidents={incidents}
+                    onSelectIncident={setSelectedIncidentId}
+                    onDeclareIncident={handleDeclareIncident}
+                />;
     }
 
     if (currentView === 'Sensors') {
