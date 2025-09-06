@@ -1,4 +1,5 @@
 
+
 export enum SensorStatus {
   Online = 'Online',
   Offline = 'Offline',
@@ -104,4 +105,57 @@ export interface VibrationDataPoint {
 export interface AlertsTrendDataPoint {
   day: string;
   count: number;
+}
+
+export interface Asset {
+  assetId: string;
+  sensorId: string;
+  model: string;
+  serialNumber: string;
+  deploymentDate: string;
+  warrantyEndDate: string;
+  status: 'Active' | 'In Repair' | 'Decommissioned';
+}
+
+export interface Technician {
+  id: string;
+  name: string;
+  team: string;
+  stats: {
+    tasksCompleted: number;
+    avgResponseTime: number; // in hours
+    successRate: number; // percentage
+  };
+}
+
+export enum ApprovalStatus {
+  Approved = 'Approved',
+  Pending = 'Pending',
+  Submitted = 'Submitted',
+  Rejected = 'Rejected',
+}
+
+export interface Approval {
+  id: string;
+  name: string;
+  authority: string;
+  status: ApprovalStatus;
+  submitted: string;
+  approved: string | null;
+}
+
+export interface QACheck {
+  id: string;
+  sensorId: string;
+  checkType: string;
+  result: 'Pass' | 'Fail';
+  timestamp: string;
+  notes: string;
+}
+
+export interface CommissioningTask {
+  id: string;
+  task: string;
+  status: 'Completed' | 'In Progress' | 'Not Started';
+  responsibleTeam: string;
 }

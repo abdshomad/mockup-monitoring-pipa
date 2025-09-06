@@ -1,4 +1,4 @@
-import { Sensor, Alert, SensorStatus, AlertSeverity, AlertStatus, ChartDataPoint, PressureDataPoint, VibrationDataPoint, AlertsTrendDataPoint, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus } from './types';
+import { Sensor, Alert, SensorStatus, AlertSeverity, AlertStatus, ChartDataPoint, PressureDataPoint, VibrationDataPoint, AlertsTrendDataPoint, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus, Asset, Technician, Approval, ApprovalStatus, QACheck, CommissioningTask } from './types';
 
 export const SENSORS: Sensor[] = [
   { id: 'P-VIB-001', type: SensorType.VibrationPressure, location: { lat: 34.0522, lng: -118.2437, segment: 'Red Line' }, status: SensorStatus.Online, powerLevel: 92, lastSeen: '2024-07-31 10:00:00', vibration: 0.02, pressure: 502 },
@@ -139,12 +139,58 @@ export const SENSOR_HISTORY_DATA: Record<string, ChartDataPoint[]> = {
     'P-VIB-008': generateHistory(0.05, 498, 24, false),
 };
 
+export const ASSETS: Asset[] = SENSORS.map((sensor, index) => ({
+  assetId: `ASSET-0${index + 1}`,
+  sensorId: sensor.id,
+  model: sensor.type === SensorType.Acoustic ? 'Acoustic-X2' : (sensor.type === SensorType.Flowmeter ? 'FlowMaster-5k' : 'VibraPress-Pro'),
+  serialNumber: `SN-18${index}XYZ${index * 3}`,
+  deploymentDate: `2023-0${Math.floor(index / 2) + 1}-15`,
+  warrantyEndDate: `2026-0${Math.floor(index / 2) + 1}-15`,
+  status: sensor.status === SensorStatus.Offline ? 'In Repair' : 'Active',
+}));
+
+export const TECHNICIANS: Technician[] = [
+  { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 } },
+  { id: 'T-002', name: 'Bob Williams', team: 'Bravo', stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 } },
+  { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 } },
+];
+
+export const APPROVALS: Approval[] = [
+    { id: 'APP-001', name: 'Environmental Impact Assessment', authority: 'Ministry of Environment', status: ApprovalStatus.Approved, submitted: '2024-05-10', approved: '2024-07-15' },
+    { id: 'APP-002', name: 'Right-of-Way Permit', authority: 'National Land Authority', status: ApprovalStatus.Pending, submitted: '2024-06-20', approved: null },
+    { id: 'APP-003', name: 'Telecom Spectrum License', authority: 'Communications Authority', status: ApprovalStatus.Submitted, submitted: '2024-07-22', approved: null },
+    { id: 'APP-004', name: 'Construction Safety Plan', authority: 'Occupational Safety Board', status: ApprovalStatus.Rejected, submitted: '2024-07-01', approved: null },
+];
+
+export const QA_CHECKS: QACheck[] = [
+    { id: 'QA-001', sensorId: 'P-VIB-001', checkType: 'Calibration', result: 'Pass', timestamp: '2024-07-28 10:00', notes: 'Within ±0.5% tolerance.' },
+    { id: 'QA-002', sensorId: 'P-VIB-002', checkType: 'Signal Strength', result: 'Pass', timestamp: '2024-07-28 11:30', notes: '-65 dBm signal strength, excellent.' },
+    { id: 'QA-003', sensorId: 'P-VIB-003', checkType: 'Physical Inspection', result: 'Pass', timestamp: '2024-07-29 09:00', notes: 'No signs of tampering or damage.' },
+    { id: 'QA-004', sensorId: 'P-VIB-005', checkType: 'Calibration', result: 'Fail', timestamp: '2024-07-29 14:00', notes: 'Pressure reading off by 5%. Recalibration required.' },
+];
+
+export const COMMISSIONING_TASKS: CommissioningTask[] = [
+    { id: 'CT-001', task: 'End-to-End Network Connectivity Test', status: 'Completed', responsibleTeam: 'Network Ops' },
+    { id: 'CT-002', task: 'Data Integrity Verification (24-hour run)', status: 'In Progress', responsibleTeam: 'Data Analytics' },
+    { id: 'CT-003', task: 'Alert Trigger Simulation (Theft & Leak)', status: 'In Progress', responsibleTeam: 'Field Ops' },
+    { id: 'CT-004', task: 'User Acceptance Testing (UAT)', status: 'Not Started', responsibleTeam: 'Project Management' },
+    { id: 'CT-005', task: 'System Handover & Documentation Sign-off', status: 'Not Started', responsibleTeam: 'Project Management' },
+];
 
 export const ICONS = {
   dashboard: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
   alerts: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
   sensors: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6.001l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.367a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg>,
-  maintenance: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+  maintenance: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+  map: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 10l6-3m0 0V7" /></svg>,
+  reporting: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
+  settings: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+  
+  preConstruction: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+  construction: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M14.08 6.56l-1.12 2.88-4.96 1.28 1.12-2.88 4.96-1.28z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.14 19.14l-1.42-1.42" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22V19" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.86 19.14l1.42-1.42" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2 12h3" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.86 4.86l1.42 1.42" /></svg>,
+  operations: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4" /></svg>,
+  assetManagement: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 13h18" /></svg>,
+
   sensorVibrationPressure: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h4z" /></svg>,
   sensorAcoustic: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5 5 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>,
   sensorFlowmeter: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" /></svg>,

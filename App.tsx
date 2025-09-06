@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -6,10 +5,49 @@ import Dashboard from './components/Dashboard';
 import AlertsView from './components/AlertsView';
 import SensorsView from './components/SensorsView';
 import MaintenanceView from './components/MaintenanceView';
+import PlanningView from './components/PlanningView';
 import { SensorType, AlertStatus } from './types';
 import { ALERTS } from './constants';
+import MapView from './components/MapView';
+import SiteSurveyView from './components/SiteSurveyView';
+import DesignView from './components/DesignView';
+import ApprovalsView from './components/ApprovalsView';
+import ImplementationView from './components/ImplementationView';
+import QualityAssuranceView from './components/QualityAssuranceView';
+import CommissioningView from './components/CommissioningView';
+import AssetManagementView from './components/AssetManagementView';
+import SystemHealthView from './components/SystemHealthView';
+import AlertHistoryView from './components/AlertHistoryView';
+import TechnicianPerformanceView from './components/TechnicianPerformanceView';
+import UserProfileView from './components/UserProfileView';
+import NotificationsView from './components/NotificationsView';
+import SystemConfigView from './components/SystemConfigView';
 
-export type View = 'Dashboard' | 'Alerts' | 'Sensors' | 'Maintenance';
+export type View = 
+  | 'Dashboard' 
+  | 'Alerts' 
+  | 'Sensors' 
+  | 'Maintenance'
+  | 'Map View'
+  // Pre-Construction
+  | 'Planning'
+  | 'Site Survey'
+  | 'Design'
+  | 'Approvals'
+  // Construction
+  | 'Implementation'
+  | 'Quality Assurance'
+  | 'Commissioning'
+  // Maintenance
+  | 'Asset Management'
+  // Reporting
+  | 'System Health'
+  | 'Alert History'
+  | 'Technician Performance'
+  // System
+  | 'User Profile'
+  | 'Notifications'
+  | 'System Config';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
@@ -32,6 +70,36 @@ const App: React.FC = () => {
         return <SensorsView sensorFilter={sensorFilter} />;
       case 'Maintenance':
         return <MaintenanceView />;
+      case 'Planning':
+        return <PlanningView />;
+      case 'Map View':
+        return <MapView />;
+      case 'Site Survey':
+        return <SiteSurveyView />;
+      case 'Design':
+        return <DesignView />;
+      case 'Approvals':
+        return <ApprovalsView />;
+      case 'Implementation':
+        return <ImplementationView />;
+      case 'Quality Assurance':
+        return <QualityAssuranceView />;
+      case 'Commissioning':
+        return <CommissioningView />;
+      case 'Asset Management':
+        return <AssetManagementView />;
+      case 'System Health':
+        return <SystemHealthView />;
+      case 'Alert History':
+        return <AlertHistoryView />;
+      case 'Technician Performance':
+        return <TechnicianPerformanceView />;
+      case 'User Profile':
+        return <UserProfileView />;
+      case 'Notifications':
+        return <NotificationsView />;
+      case 'System Config':
+        return <SystemConfigView />;
       default:
         return <Dashboard />;
     }

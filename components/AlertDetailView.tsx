@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { ALERTS } from '../constants';
 import { ALERT_DETAILS } from '../constants/alert-details';
 import { Alert, AlertSeverity, AlertStatus } from '../types';
 import { GoogleGenAI, Type } from '@google/genai';
 
 interface AlertDetailViewProps {
-  alertId: string;
+  alert: Alert | undefined;
   onBack: () => void;
 }
 
@@ -53,8 +52,7 @@ const AILoader: React.FC = () => (
     </div>
 );
 
-const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alertId, onBack }) => {
-  const alert = ALERTS.find(a => a.id === alertId);
+const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
   const details = alert ? ALERT_DETAILS[alert.type] : null;
 
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
