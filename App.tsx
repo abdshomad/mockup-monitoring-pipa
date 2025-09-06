@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -26,12 +24,17 @@ import NotificationsView from './components/NotificationsView';
 import SystemConfigView from './components/SystemConfigView';
 import AIPriorityTasksModal from './components/AIPriorityTasksModal';
 import AIAssistant from './components/AIAssistant';
+import IncidentLogView from './components/IncidentLogView';
+import KanbanBoardView from './components/KanbanBoardView';
+import AlertDetailView from './components/AlertDetailView';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
   'Alerts': AlertsView,
+  'Kanban View': KanbanBoardView,
+  'Incident Log': IncidentLogView,
   'Sensors': SensorsView,
-  'Maintenance': MaintenanceView,
+  'Scheduled Maintenance': MaintenanceView,
   'Map View': MapView,
   'Planning': PlanningView,
   'Site Survey': SiteSurveyView,
@@ -52,25 +55,35 @@ const viewComponents: Record<View, React.FC<any>> = {
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
   const handleSetCurrentView = (view: View, type: SensorType | null = null) => {
     setCurrentView(view);
     setSensorFilter(view === 'Sensors' ? type : null);
+    setSelectedAlertId(null);
   };
 
   const activeAlertsCount = ALERTS.filter(a => a.stage !== AlertWorkflowStage.Resolved).length;
 
-  // FIX: Explicitly handle rendering for components that require props to satisfy
-  // TypeScript's type checking for dynamic components.
   const renderView = () => {
+    if (selectedAlertId) {
+        const selectedAlert = ALERTS.find(a => a.id === selectedAlertId);
+        return <AlertDetailView alert={selectedAlert} onBack={() => setSelectedAlertId(null)} />;
+    }
+
     if (currentView === 'Sensors') {
       return <SensorsView sensorFilter={sensorFilter} />;
     }
     if (currentView === 'Dashboard') {
         return <Dashboard setCurrentView={handleSetCurrentView} />;
     }
+     if (currentView === 'Alerts' || currentView === 'Kanban View') {
+        const Component = viewComponents[currentView];
+        return <Component setSelectedAlertId={setSelectedAlertId} />;
+    }
+
     const Component = viewComponents[currentView] || Dashboard;
     return <Component />;
   };
@@ -94,7 +107,7 @@ const App: React.FC = () => {
         </main>
       </div>
 
-      <AIAssistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} currentView={currentView} />
+      <AIAssistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} currentView={currentView} sensorFilter={sensorFilter} />
       
       <button
         onClick={() => setIsAssistantOpen(true)}

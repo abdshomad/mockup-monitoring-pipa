@@ -3,15 +3,16 @@ import { ICONS } from '../constants';
 import { useGeminiChat } from '../hooks/useGeminiChat';
 import Message from './ai/Message';
 import PromptSuggestions from './ai/PromptSuggestions';
-import { View } from '../types';
+import { View, SensorType } from '../types';
 
 interface AIAssistantProps {
   isOpen: boolean;
   onClose: () => void;
   currentView: View;
+  sensorFilter: SensorType | null;
 }
 
-const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose, currentView }) => {
+const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose, currentView, sensorFilter }) => {
   const [input, setInput] = useState('');
   const { messages, loading, sendMessage } = useGeminiChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -63,7 +64,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose, currentView 
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 space-y-4 chat-message-container">
-        {messages.length === 0 && !loading && <PromptSuggestions onSelect={handlePromptSelect} currentView={currentView} />}
+        {messages.length === 0 && !loading && <PromptSuggestions onSelect={handlePromptSelect} currentView={currentView} sensorFilter={sensorFilter} />}
         {messages.map((msg, index) => (
           <Message key={index} role={msg.role} content={msg.content} />
         ))}

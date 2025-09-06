@@ -1,28 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, AlertSeverity, AlertWorkflowStage, AlertAction } from '../types';
-import { ICONS } from '../constants';
 
-const getSeverityBadgeClass = (severity: AlertSeverity) => {
-    switch (severity) {
-        case AlertSeverity.Critical: return 'bg-red-500/20 text-red-400';
-        case AlertSeverity.High: return 'bg-orange-500/20 text-orange-400';
-        case AlertSeverity.Medium: return 'bg-yellow-500/20 text-yellow-400';
-        case AlertSeverity.Low: return 'bg-blue-500/20 text-blue-400';
-        default: return 'bg-slate-500/20 text-slate-400';
-    }
-};
-    
-const getStageBadgeClass = (stage: AlertWorkflowStage) => {
-    switch (stage) {
-        case AlertWorkflowStage.Triage: return 'bg-cyan-500/20 text-cyan-400';
-        case AlertWorkflowStage.Investigating: return 'bg-purple-500/20 text-purple-400';
-        case AlertWorkflowStage.Dispatched: return 'bg-indigo-500/20 text-indigo-400';
-        case AlertWorkflowStage.OnSite: return 'bg-blue-500/20 text-blue-400';
-        case AlertWorkflowStage.Resolving: return 'bg-yellow-500/20 text-yellow-400';
-        case AlertWorkflowStage.Resolved: return 'bg-green-500/20 text-green-400';
-        default: return 'bg-slate-500/20 text-slate-400';
-    }
-};
+import React, { useEffect } from 'react';
+import { Alert } from '../types';
+import { ICONS } from '../constants';
+import { useCountdown } from '../hooks/useCountdown';
+import { getSeverityBadgeClass, getStageBadgeClass } from '../utils/badgeStyles';
 
 interface TimeMachineAlertModalProps {
   alert: Alert | null;
@@ -30,33 +11,13 @@ interface TimeMachineAlertModalProps {
 }
 
 const TimeMachineAlertModal: React.FC<TimeMachineAlertModalProps> = ({ alert, onClose }) => {
-  const [countdown, setCountdown] = useState(10);
-  const [isCountdownPaused, setIsCountdownPaused] = useState(false);
+  const { count, isPaused, toggle: toggleCountdownPause, reset: resetCountdown } = useCountdown(10, onClose, false);
 
-  // Effect to reset countdown when a new alert appears
   useEffect(() => {
     if (alert) {
-      setCountdown(10);
-      setIsCountdownPaused(false);
+      resetCountdown(10);
     }
-  }, [alert]);
-
-  // Effect to handle the timer logic
-  useEffect(() => {
-    if (alert && !isCountdownPaused) {
-      const timerId = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerId);
-            onClose();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timerId);
-    }
-  }, [alert, isCountdownPaused, onClose]);
+  }, [alert, resetCountdown]);
 
   if (!alert) return null;
 
@@ -64,10 +25,6 @@ const TimeMachineAlertModal: React.FC<TimeMachineAlertModalProps> = ({ alert, on
     ?.slice()
     .reverse()
     .find(action => action.notes || action.attachment);
-
-  const toggleCountdownPause = () => {
-    setIsCountdownPaused(prev => !prev);
-  };
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -144,11 +101,11 @@ const TimeMachineAlertModal: React.FC<TimeMachineAlertModalProps> = ({ alert, on
                     </div>
                 )}
                  <p className="text-slate-300 text-sm">
-                    {isCountdownPaused ? (
+                    {isPaused ? (
                         <span className="font-semibold text-yellow-400">Countdown paused. Tap screen to resume.</span>
                     ) : (
                         <>
-                            Playback has been paused. Auto-resuming in <span className="font-semibold text-white">{countdown}</span>s.
+                            Playback has been paused. Auto-resuming in <span className="font-semibold text-white">{count}</span>s.
                         </>
                     )}
                 </p>
@@ -159,7 +116,7 @@ const TimeMachineAlertModal: React.FC<TimeMachineAlertModalProps> = ({ alert, on
             onClick={handleClose}
             className="px-5 py-2 bg-cyan-500 text-white font-semibold rounded-lg hover:bg-cyan-600 transition-colors shadow-md min-w-[140px]"
           >
-            Resume ({countdown})
+            Resume ({count})
           </button>
         </footer>
       </div>

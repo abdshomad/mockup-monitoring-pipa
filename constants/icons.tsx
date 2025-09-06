@@ -5,12 +5,14 @@ import {
   MapPin, AlertTriangle, CheckCircle2, Activity, TrendingUp, TrendingDown,
   Shield, Search, Eye, FileText, HelpCircle, ListChecks, Paperclip,
   Sparkles, Send, X, Clipboard, PlayCircle, PauseCircle, Rewind,
-  FastForward, Zap, ShieldCheck
+  FastForward, Zap, ShieldCheck, Siren, KanbanSquare
 } from 'lucide-react';
 
 export const ICONS = {
   dashboard: <LayoutGrid />,
   alerts: <Bell />,
+  kanban: <KanbanSquare />,
+  incidentLog: <Siren />,
   sensors: <Waypoints />,
   maintenance: <Wrench />,
   map: <Map />,

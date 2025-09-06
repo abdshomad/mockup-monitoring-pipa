@@ -1,22 +1,14 @@
 
+
 import React, { useState } from 'react';
 import { ALERTS } from '../constants';
 import { Alert, AlertSeverity } from '../types';
+import { getSeverityBadgeClass } from '../utils/badgeStyles';
 
 const AlertHistoryView: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [severityFilter, setSeverityFilter] = useState<AlertSeverity | null>(null);
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
-
-    const getSeverityBadgeClass = (severity: AlertSeverity) => {
-        switch (severity) {
-            case AlertSeverity.Critical: return 'bg-red-500/20 text-red-400';
-            case AlertSeverity.High: return 'bg-orange-500/20 text-orange-400';
-            case AlertSeverity.Medium: return 'bg-yellow-500/20 text-yellow-400';
-            case AlertSeverity.Low: return 'bg-blue-500/20 text-blue-400';
-            default: return 'bg-slate-500/20 text-slate-400';
-        }
-    };
 
     const filteredAlerts = ALERTS.filter(alert => {
         const matchesSearch = searchTerm === '' ||

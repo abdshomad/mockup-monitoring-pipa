@@ -1,12 +1,13 @@
 import React from 'react';
-import { View } from '../../types';
+import { View, SensorType } from '../../types';
 
 interface PromptSuggestionsProps {
     onSelect: (prompt: string) => void;
     currentView: View;
+    sensorFilter: SensorType | null;
 }
 
-const suggestionsByView: Partial<Record<View, string[]>> = {
+const suggestionsByView: Partial<Record<string, string[]>> = {
     'Dashboard': [
         'Summarize all active alerts.',
         'How many sensors are offline?',
@@ -20,9 +21,24 @@ const suggestionsByView: Partial<Record<View, string[]>> = {
     'Sensors': [
         'Which sensor has the lowest power level?',
         'List all acoustic sensors and their status.',
-        'What is the current reading for sensor P-VIB-002?',
+        'Compare the health scores of all flowmeters.',
     ],
-    'Maintenance': [
+    'Sensors:Vibration & Pressure': [
+        'What is the current pressure reading for sensor P-VIB-002?',
+        'List all Vibration & Pressure sensors with alerts.',
+        'What was the highest vibration recorded today?',
+    ],
+    'Sensors:Acoustic': [
+        'Are there any offline acoustic sensors?',
+        'Show me the maintenance history for acoustic sensors.',
+        'Which acoustic sensor has the lowest health score?',
+    ],
+    'Sensors:Flowmeter': [
+        'List all flowmeters and their locations.',
+        'What is the operational status of all flowmeters?',
+        'Are there any maintenance tasks scheduled for flowmeters?',
+    ],
+    'Scheduled Maintenance': [
         'What tasks are currently in progress?',
         'What tasks are assigned to Alice Johnson?',
         'Show me all maintenance for offline sensors.',
@@ -45,7 +61,7 @@ const suggestionsByView: Partial<Record<View, string[]>> = {
 };
 
 
-const PromptSuggestions: React.FC<PromptSuggestionsProps> = ({ onSelect, currentView }) => {
+const PromptSuggestions: React.FC<PromptSuggestionsProps> = ({ onSelect, currentView, sensorFilter }) => {
     
     const defaultSuggestions = [
         'Summarize all active alerts.',
@@ -53,10 +69,19 @@ const PromptSuggestions: React.FC<PromptSuggestionsProps> = ({ onSelect, current
         'Show me the maintenance schedule.',
     ];
     
-    const suggestions = suggestionsByView[currentView];
-    const finalSuggestions = (suggestions && suggestions.length > 0) ? suggestions : defaultSuggestions;
+    let suggestions: string[] | undefined;
+    let viewName = currentView === 'Dashboard' ? 'the system' : currentView;
+
+    if (currentView === 'Sensors' && sensorFilter) {
+        suggestions = suggestionsByView[`${currentView}:${sensorFilter}`];
+        viewName = `${sensorFilter} sensors`;
+    } 
     
-    const viewName = currentView === 'Dashboard' ? 'the system' : currentView;
+    if (!suggestions) {
+        suggestions = suggestionsByView[currentView];
+    }
+    
+    const finalSuggestions = (suggestions && suggestions.length > 0) ? suggestions : defaultSuggestions;
 
     return (
         <div className="p-4 space-y-2 animate-fade-in">
