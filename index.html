@@ -32,6 +32,38 @@
   .animate-fade-in {
     animation: fade-in 0.5s ease-out forwards;
   }
+  /* AI Assistant Styles */
+  .chat-window {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+  .chat-window.open {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  .chat-window.closed {
+    transform: translateY(20px) translateX(20px);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .chat-fab {
+    transition: transform 0.2s ease-in-out, scale 0.3s ease-out;
+  }
+  .chat-fab:hover {
+    transform: scale(1.1);
+  }
+  .chat-message-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-message-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .chat-message-container::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 3px;
+  }
+  .chat-message-container::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
 </style>
 </head>
   <body class="bg-slate-900 text-slate-200">

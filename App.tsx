@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -8,7 +9,7 @@ import SensorsView from './components/SensorsView';
 import MaintenanceView from './components/MaintenanceView';
 import PlanningView from './components/PlanningView';
 import { SensorType, View, AlertWorkflowStage } from './types';
-import { ALERTS } from './constants';
+import { ALERTS, ICONS } from './constants';
 import MapView from './components/MapView';
 import SiteSurveyView from './components/SiteSurveyView';
 import DesignView from './components/DesignView';
@@ -24,6 +25,7 @@ import UserProfileView from './components/UserProfileView';
 import NotificationsView from './components/NotificationsView';
 import SystemConfigView from './components/SystemConfigView';
 import AIPriorityTasksModal from './components/AIPriorityTasksModal';
+import AIAssistant from './components/AIAssistant';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard,
@@ -51,6 +53,7 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('Dashboard');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
   const handleSetCurrentView = (view: View, type: SensorType | null = null) => {
     setCurrentView(view);
@@ -90,6 +93,17 @@ const App: React.FC = () => {
           {renderView()}
         </main>
       </div>
+
+      <AIAssistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} currentView={currentView} />
+      
+      <button
+        onClick={() => setIsAssistantOpen(true)}
+        className={`chat-fab fixed bottom-8 right-8 h-16 w-16 bg-purple-600 text-white rounded-full shadow-lg flex items-center justify-center z-30 ${isAssistantOpen ? 'scale-0' : 'scale-100'}`}
+        aria-label="Open AI Assistant"
+      >
+        {React.cloneElement(ICONS.ai, { className: "h-8 w-8" })}
+      </button>
+
     </div>
   );
 };
