@@ -13,7 +13,6 @@ interface AlertDetailsTabProps {
 
 const AlertDetailsTab: React.FC<AlertDetailsTabProps> = ({ currentAlert, setCurrentAlert }) => {
     const details = ALERT_DETAILS[currentAlert.type] || null;
-    const aiAnalysis = details?.aiInsights;
     
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -22,7 +21,7 @@ const AlertDetailsTab: React.FC<AlertDetailsTabProps> = ({ currentAlert, setCurr
             </div>
             <div className="lg:col-span-2 space-y-6">
                 {details && <AlertInformation details={details} />}
-                {aiAnalysis && <AIAnalysis aiAnalysis={aiAnalysis} />}
+                <AIAnalysis alert={currentAlert} />
             </div>
             <div className="lg:col-span-3">
                 <MultimediaAttachments 
