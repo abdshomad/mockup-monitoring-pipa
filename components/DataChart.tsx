@@ -1,4 +1,5 @@
 import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChartDataPoint } from '../types';
 
 interface DataChartProps {
@@ -6,19 +7,6 @@ interface DataChartProps {
 }
 
 const DataChart: React.FC<DataChartProps> = ({ data }) => {
-  // Because we are using CDN, we have to get Recharts from the window object
-  const Recharts = (window as any).Recharts;
-
-  if (!Recharts) {
-    return (
-      <div style={{ width: '100%', height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="text-slate-400">
-        Loading Chart...
-      </div>
-    );
-  }
-
-  const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
-
   return (
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>

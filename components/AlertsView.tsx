@@ -1,9 +1,10 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { ALERTS } from '../constants';
 import { AlertSeverity, AlertStatus } from '../types';
+import AlertDetailView from './AlertDetailView';
 
 const AlertsView: React.FC = () => {
+    const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
     
     const getSeverityBadgeClass = (severity: AlertSeverity) => {
         switch (severity) {
@@ -24,6 +25,10 @@ const AlertsView: React.FC = () => {
             default: return 'bg-slate-500/20 text-slate-400';
         }
     };
+
+    if (selectedAlertId) {
+        return <AlertDetailView alertId={selectedAlertId} onBack={() => setSelectedAlertId(null)} />;
+    }
 
     return (
         <div className="bg-slate-800 p-6 rounded-2xl shadow-lg">
@@ -59,7 +64,7 @@ const AlertsView: React.FC = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <a href="#" className="font-medium text-cyan-400 hover:underline">Details</a>
+                                    <button onClick={() => setSelectedAlertId(alert.id)} className="font-medium text-cyan-400 hover:underline">Details</button>
                                 </td>
                             </tr>
                         ))}

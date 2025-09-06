@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from '../App';
 import { ICONS } from '../constants';
+import { SensorType } from '../types';
 
 interface SidebarProps {
   currentView: View;
-  setCurrentView: (view: View) => void;
+  setCurrentView: (view: View, type?: SensorType | null) => void;
+  sensorFilter: SensorType | null;
 }
 
 const NavItem: React.FC<{
@@ -30,7 +32,35 @@ const NavItem: React.FC<{
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView }) => {
+const ChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
+    <svg className={`w-5 h-5 transition-transform duration-200 ${open ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+);
+
+const getSensorTypeIcon = (type: SensorType) => {
+    switch (type) {
+        case SensorType.VibrationPressure: return ICONS.sensorVibrationPressure;
+        case SensorType.Acoustic: return ICONS.sensorAcoustic;
+        case SensorType.Flowmeter: return ICONS.sensorFlowmeter;
+        default: return null;
+    }
+};
+
+
+const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, sensorFilter }) => {
+  const [isSensorsSubMenuOpen, setSensorsSubMenuOpen] = useState(false);
+  
+  useEffect(() => {
+    if (currentView !== 'Sensors') {
+      setSensorsSubMenuOpen(false);
+    } else if (currentView === 'Sensors' && !isSensorsSubMenuOpen) {
+      setSensorsSubMenuOpen(true);
+    }
+  }, [currentView]);
+
+  const isSensorsActive = currentView === 'Sensors';
+
   return (
     <aside className="w-64 flex-shrink-0 bg-slate-800 p-4 flex flex-col justify-between">
       <div>
@@ -44,7 +74,54 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView }) => {
           <ul>
             <NavItem viewName="Dashboard" icon={ICONS.dashboard} currentView={currentView} onClick={() => setCurrentView('Dashboard')} />
             <NavItem viewName="Alerts" icon={ICONS.alerts} currentView={currentView} onClick={() => setCurrentView('Alerts')} />
-            <NavItem viewName="Sensors" icon={ICONS.sensors} currentView={currentView} onClick={() => setCurrentView('Sensors')} />
+            <li>
+                <div
+                    onClick={() => {
+                        if (currentView === 'Sensors') {
+                          setSensorsSubMenuOpen(!isSensorsSubMenuOpen);
+                        } else {
+                          setSensorsSubMenuOpen(true);
+                        }
+                        setCurrentView('Sensors', null);
+                    }}
+                    className={`flex items-center justify-between p-3 my-1 rounded-lg cursor-pointer transition-colors duration-200 ${
+                        isSensorsActive && !sensorFilter
+                          ? 'bg-cyan-500 text-white shadow-lg'
+                          : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                      }`}
+                >
+                    <div className="flex items-center">
+                        {ICONS.sensors}
+                        <span className="ml-4 font-medium">Sensors</span>
+                    </div>
+                    <ChevronIcon open={isSensorsSubMenuOpen} />
+                </div>
+                {isSensorsSubMenuOpen && (
+                    <ul className="pl-6 mt-1 space-y-1">
+                        {Object.values(SensorType).map(type => {
+                            const isSubItemActive = isSensorsActive && sensorFilter === type;
+                            return (
+                                <li
+                                    key={type}
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent parent onClick from firing
+                                      setCurrentView('Sensors', type);
+                                    }}
+                                    className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm ${
+                                        isSubItemActive
+                                        ? 'bg-slate-700/50 text-cyan-400 font-semibold'
+                                        : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                                    }`}
+                                >
+                                    <span className="w-6 h-6">{getSensorTypeIcon(type)}</span>
+                                    <span className="ml-3">{type}</span>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                )}
+            </li>
+            <NavItem viewName="Maintenance" icon={ICONS.maintenance} currentView={currentView} onClick={() => setCurrentView('Maintenance')} />
           </ul>
         </nav>
       </div>
