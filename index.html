@@ -64,6 +64,32 @@
   .chat-message-container::-webkit-scrollbar-thumb:hover {
     background: #64748b;
   }
+  
+  /* Time Machine Slider Thumb */
+  .time-machine-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #22d3ee; /* cyan-400 */
+    border: 3px solid #0f172a; /* slate-900 */
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -7px; /* (thumb-height(16) - track-height(2)) / -2 + border correction */
+    position: relative;
+    z-index: 20;
+  }
+
+  .time-machine-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #22d3ee;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    z-index: 20;
+  }
 </style>
 </head>
   <body class="bg-slate-900 text-slate-200">

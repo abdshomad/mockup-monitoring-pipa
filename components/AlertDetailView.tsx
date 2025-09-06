@@ -120,7 +120,9 @@ const AlertDetailView: React.FC<AlertDetailViewProps> = ({ alert, onBack }) => {
     if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            alert("File size exceeds 5MB limit.");
+            // FIX: The component prop 'alert' was shadowing the global `window.alert` function.
+            // Using `window.alert` to explicitly call the global function.
+            window.alert("File size exceeds 5MB limit.");
             return;
         }
         setAttachmentFile(file);

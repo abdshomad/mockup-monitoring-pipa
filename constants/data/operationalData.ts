@@ -1,7 +1,14 @@
 
 
 
-import { Sensor, Alert, SensorStatus, AlertSeverity, AlertWorkflowStage, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus, Asset, Technician, AIInsight } from '../../types';
+
+
+
+
+
+
+
+import { Sensor, Alert, SensorStatus, AlertSeverity, AlertWorkflowStage, SensorType, RunningAlert, RunningAlertStatus, MaintenanceTask, MaintenanceStatus, Asset, Technician, AIInsight, TechnicianStatus } from '../../types';
 
 // --- TIME HELPER FUNCTIONS ---
 const MOCK_CURRENT_DATE = new Date('2025-09-06T14:30:00Z');
@@ -45,7 +52,7 @@ const getRelativeDate = (offset: { days?: number, months?: number, years?: numbe
 };
 
 // --- MOCK IMAGE DATA ---
-const MOCK_IMAGE_BASE64_DATA_URI = 'data:image/jpeg;base64,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';
+const MOCK_IMAGE_BASE64_DATA_URI = 'data:image/jpeg;base64,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';
 
 // --- DYNAMIC DATE CONSTANTS ---
 
@@ -81,12 +88,13 @@ export const ALERTS: Alert[] = [
       { timestamp: formatTimestamp(alert1_triggerTime), action: 'Alert Triggered', operator: 'System' },
       { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 5 * 1000)), action: 'Moved to Triage', operator: 'System' },
       { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 65 * 1000)), action: 'AI Analysis Completed', operator: 'System' },
-      { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 120 * 1000)), action: 'Moved to Investigating', operator: 'Operator 1' },
-      { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 300 * 1000)), action: 'Moved to Dispatched', operator: 'Auto-Dispatch' },
+      { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 120 * 1000)), action: 'Moved to Investigating', operator: 'Andi (Control Room)', notes: 'Correlating with upstream sensor data. No anomalies detected on adjacent sensors.' },
+      { timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 300 * 1000)), action: 'Moved to Dispatched', operator: 'Auto-Dispatch', notes: 'Patrol team Alpha-3 dispatched. ETA 15 minutes.' },
       {
         timestamp: formatTimestamp(new Date(alert1_triggerTime.getTime() + 400 * 1000)),
-        action: 'On-site image uploaded',
-        operator: 'Field Tech 1',
+        action: 'Field Observation',
+        operator: 'Siti (Field Tech)',
+        notes: 'Visual inspection confirms significant external corrosion at weld joint. Recommend immediate ultrasonic thickness testing.',
         attachment: {
             type: 'image',
             data: MOCK_IMAGE_BASE64_DATA_URI,
@@ -107,7 +115,13 @@ export const ALERTS: Alert[] = [
     history: [
       { timestamp: formatTimestamp(alert2_triggerTime), action: 'Alert Triggered', operator: 'System' },
       { timestamp: formatTimestamp(new Date(alert2_triggerTime.getTime() + 5 * 1000)), action: 'Moved to Triage', operator: 'System' },
-      { timestamp: formatTimestamp(new Date(alert2_triggerTime.getTime() + 45 * 1000)), action: 'Moved to Investigating', operator: 'Operator 1' },
+      { timestamp: formatTimestamp(new Date(alert2_triggerTime.getTime() + 45 * 1000)), action: 'Moved to Investigating', operator: 'Andi (Control Room)' },
+      { 
+        timestamp: formatTimestamp(new Date(alert2_triggerTime.getTime() + 300 * 1000)),
+        action: 'Initial Assessment',
+        operator: 'Budi (Control Room)',
+        notes: 'Correlated pressure drop with upstream pump station E-12 shutdown for emergency maintenance. Monitoring for pressure stabilization. No leak suspected at this time.'
+    }
     ]
   },
   { 
@@ -181,9 +195,9 @@ export const ASSETS: Asset[] = SENSORS.map((sensor, index) => ({
 }));
 
 export const TECHNICIANS: Technician[] = [
-  { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 } },
-  { id: 'T-002', name: 'Bob Williams', team: 'Bravo', stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 } },
-  { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 } },
+  { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', availability: TechnicianStatus.Available, stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 } },
+  { id: 'T-002', name: 'Bob Williams', team: 'Bravo', availability: TechnicianStatus.OnSite, stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 } },
+  { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', availability: TechnicianStatus.OffDuty, stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 } },
 ];
 
 export const AI_INSIGHTS: AIInsight[] = [

@@ -1,6 +1,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 export enum SensorStatus {
   Online = 'Online',
   Offline = 'Offline',
@@ -39,6 +49,12 @@ export enum MaintenanceStatus {
   Scheduled = 'Scheduled',
   InProgress = 'In Progress',
   Completed = 'Completed',
+}
+
+export enum TechnicianStatus {
+  Available = 'Available',
+  OnSite = 'On Site',
+  OffDuty = 'Off Duty',
 }
 
 export interface MaintenanceTask {
@@ -88,6 +104,7 @@ export interface AlertAction {
   timestamp: string;
   action: string;
   operator: string;
+  notes?: string;
   attachment?: Attachment;
 }
 
@@ -142,6 +159,7 @@ export interface Technician {
   id:string;
   name: string;
   team: string;
+  availability: TechnicianStatus;
   stats: {
     tasksCompleted: number;
     avgResponseTime: number; // in hours
@@ -187,6 +205,22 @@ export interface AIInsight {
   title: string;
   insight: string;
   icon: 'predictiveMaintenance' | 'operationalEfficiency' | 'riskAssessment';
+}
+
+export interface SensorHistoryEvent {
+  timestamp: string; // ISO 8601 format string
+  sensorId: string;
+  status?: SensorStatus;
+  powerLevel?: number;
+  vibration?: number;
+  pressure?: number;
+}
+
+export interface TimelineEvent {
+  id: string;
+  timestamp: number;
+  description: string;
+  severity: AlertSeverity;
 }
 
 export type View = 
