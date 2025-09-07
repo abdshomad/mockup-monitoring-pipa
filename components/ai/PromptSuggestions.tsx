@@ -63,6 +63,12 @@ const suggestionsByView: Partial<Record<string, string[]>> = {
         'What is the average response time for Team Alpha?',
         'List all technicians and their success rates.'
     ],
+    'LoRaWAN Network': [
+        'Which gateway is offline?',
+        'Which devices are connected to GW-01-REDLINE?',
+        'Show all devices with a low battery.',
+        'List all devices with an SNR below 6.0.',
+    ],
 };
 
 

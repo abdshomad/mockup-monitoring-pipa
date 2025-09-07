@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { GoogleGenAI, Chat } from '@google/genai';
-import { SENSORS, ALERTS, MAINTENANCE_SCHEDULE, TECHNICIANS, SENSOR_DEPLOYMENTS } from '../constants';
+import { SENSORS, ALERTS, MAINTENANCE_SCHEDULE, TECHNICIANS, SENSOR_DEPLOYMENTS, LORAWAN_DEVICES, LORAWAN_GATEWAYS } from '../constants';
 
 // Initialize the AI client
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -27,6 +27,8 @@ const getSystemContext = (): string => {
     MAINTENANCE_SCHEDULE,
     TECHNICIANS,
     SENSOR_DEPLOYMENTS: deploymentsSummary,
+    LORAWAN_GATEWAYS,
+    LORAWAN_DEVICES,
     CURRENT_DATE: new Date().toISOString(), // Provide current date for context
   };
 
