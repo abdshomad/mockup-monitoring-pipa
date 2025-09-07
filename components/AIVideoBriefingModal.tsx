@@ -33,7 +33,9 @@ const AIVideoBriefingModal: React.FC<AIVideoBriefingModalProps> = ({ isOpen, onC
   if (!isOpen || !incident) return null;
   
   const handleGenerate = () => {
-      generateBriefing(incident);
+      if (window.confirm("This will use the Gemini API to generate a video briefing. This is a slow and resource-intensive operation. Do you want to proceed?")) {
+          generateBriefing(incident);
+      }
   };
   
   const renderContent = () => {

@@ -34,7 +34,6 @@ export const useAppController = () => {
             { timestamp: getRelativeTimestamp({}), entry: `Incident declared from Alert ${alert.id}.`, operator: 'Operator 1', type: 'log' },
             ...alert.history?.map(h => ({
                 timestamp: h.timestamp, entry: h.action, operator: h.operator, notes: h.notes, 
-                // FIX: Use 'as const' to ensure TypeScript infers 'log' as a literal type, not a generic string.
                 type: 'log' as const
             })) || []
         ],

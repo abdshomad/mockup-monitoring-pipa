@@ -12,7 +12,9 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({ alert }) => {
     const [analyze, { data, loading, error }] = useGeminiAnalysis();
     
     const handleGenerate = () => {
-        analyze(alert);
+        if (window.confirm("This will use the Gemini API to analyze the alert. Do you want to proceed?")) {
+            analyze(alert);
+        }
     };
 
     return (

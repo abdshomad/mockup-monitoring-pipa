@@ -40,6 +40,12 @@ const AnomalyCard: React.FC<{ anomaly: Anomaly }> = ({ anomaly }) => (
 const AnomalyDetectionView: React.FC = () => {
     const { analyze, data, loading, error } = useGeminiAnomalyDetection();
 
+    const handleAnalysis = () => {
+        if (window.confirm("This will use the Gemini API to analyze 6 months of historical data. This may be a resource-intensive operation. Do you want to proceed?")) {
+            analyze();
+        }
+    };
+
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-white">AI-Powered Anomaly Detection</h2>
@@ -50,7 +56,7 @@ const AnomalyDetectionView: React.FC = () => {
                     </p>
                 </div>
                 <button
-                    onClick={() => analyze()}
+                    onClick={handleAnalysis}
                     disabled={loading}
                     className="px-5 py-2.5 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-md flex items-center space-x-2 disabled:bg-slate-600 disabled:cursor-not-allowed flex-shrink-0"
                 >

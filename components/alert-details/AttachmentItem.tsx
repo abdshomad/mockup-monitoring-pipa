@@ -17,8 +17,10 @@ const AttachmentItem: React.FC<AttachmentItemProps> = ({ action, currentAlert })
     const attachment = action.attachment;
 
     const handleAnalyze = () => {
-        analyzeAttachment(currentAlert, attachment);
-        setIsAnalysisVisible(true);
+        if (window.confirm("This will use the Gemini API to analyze the attachment. Do you want to proceed?")) {
+            analyzeAttachment(currentAlert, attachment);
+            setIsAnalysisVisible(true);
+        }
     };
 
     return (

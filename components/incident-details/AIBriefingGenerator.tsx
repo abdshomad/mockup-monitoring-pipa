@@ -12,9 +12,11 @@ const AIBriefingGenerator: React.FC<AIBriefingGeneratorProps> = ({ incident, onB
     const { generateBrief, loading, error } = useGeminiIncidentBriefingGenerator();
 
     const handleGenerate = async () => {
-        const brief = await generateBrief(incident);
-        if (brief) {
-            onBriefGenerated(brief);
+        if (window.confirm("This will use the Gemini API and Google Search to generate a strategy brief. Do you want to proceed?")) {
+            const brief = await generateBrief(incident);
+            if (brief) {
+                onBriefGenerated(brief);
+            }
         }
     };
 

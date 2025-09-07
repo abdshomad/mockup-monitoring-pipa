@@ -19,7 +19,9 @@ const SensorAIAnalysis: React.FC<SensorAIAnalysisProps> = ({ sensor, sensorHisto
 
     const handleGenerate = () => {
         if (sensorHistory.length > 0) {
-            analyzeSensor(sensor, sensorHistory);
+            if (window.confirm("This will use the Gemini API to analyze the sensor data. Do you want to proceed?")) {
+                analyzeSensor(sensor, sensorHistory);
+            }
         }
     };
 

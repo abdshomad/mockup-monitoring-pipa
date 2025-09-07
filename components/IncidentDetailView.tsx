@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Incident, FollowUpTask, FollowUpTaskStatus, Alert, IncidentLogEntry, IncidentStatus } from '../../types';
+import { Incident, FollowUpTask, FollowUpTaskStatus, Alert, IncidentLogEntry, IncidentStatus, AlertSeverity } from '../../types';
 import { TECHNICIANS, ICONS } from '../../constants';
 import IncidentSummary from './incident-details/IncidentSummary';
 import LinkedAlerts from './incident-details/LinkedAlerts';
@@ -65,6 +65,10 @@ const IncidentDetailView: React.FC<IncidentDetailViewProps> = ({ incident, linke
     setEditedIncident(updatedIncident); // Update local state as well
   };
 
+  const shouldShowAIBriefGenerator = !hasBrief && 
+    (incident.severity === AlertSeverity.Critical || incident.severity === AlertSeverity.High) &&
+    (incident.status === IncidentStatus.Active || incident.status === IncidentStatus.Monitoring);
+
   return (
     <>
       <AIVideoBriefingModal
@@ -105,7 +109,7 @@ const IncidentDetailView: React.FC<IncidentDetailViewProps> = ({ incident, linke
               <LinkedAlerts alerts={linkedAlerts} />
           </div>
           <div className="lg:col-span-2 space-y-6">
-              {!hasBrief && <AIBriefingGenerator incident={incident} onBriefGenerated={handleBriefGenerated} />}
+              {shouldShowAIBriefGenerator && <AIBriefingGenerator incident={incident} onBriefGenerated={handleBriefGenerated} />}
               <IncidentEventLog log={incident.log} />
               <FollowUpTasks tasks={editedIncident.followUpTasks || []} isEditing={isEditing} onUpdateTaskStatus={handleUpdateFollowUpStatus} onAddTask={handleAddFollowUpTask} technicians={TECHNICIANS} />
           </div>
