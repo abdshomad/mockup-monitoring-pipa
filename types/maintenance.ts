@@ -43,6 +43,8 @@ export interface Asset {
     qaCheckId: string; // Link to a QA check
   };
   maintenanceHistory: MaintenanceTask[];
+  predictedFailureDate?: string;
+  mtbfHours?: number;
 }
 
 export interface Technician {

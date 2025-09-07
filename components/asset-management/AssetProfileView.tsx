@@ -1,11 +1,12 @@
 import React from 'react';
 import { Asset } from '../../types';
 import { getMaintenanceStatusBadgeClass } from '../../utils/badgeStyles';
+import AssetPredictiveAnalysis from './AssetPredictiveAnalysis';
 
 interface AssetProfileViewProps {
     asset: Asset;
     onBack: () => void;
-    onScheduleMaintenance: (asset: Asset) => void;
+    onScheduleMaintenance: (asset: Asset, task?: string) => void;
 }
 
 const AssetProfileView: React.FC<AssetProfileViewProps> = ({ asset, onBack, onScheduleMaintenance }) => {
@@ -51,6 +52,7 @@ const AssetProfileView: React.FC<AssetProfileViewProps> = ({ asset, onBack, onSc
                             <div className="flex justify-between items-center"><span className="text-slate-400">Firmware Version</span><span className="font-mono text-white">{asset.firmwareVersion}</span></div>
                         </div>
                     </div>
+                    <AssetPredictiveAnalysis asset={asset} onScheduleMaintenance={onScheduleMaintenance} />
                     <div className="bg-slate-800 p-6 rounded-2xl shadow-lg">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="font-semibold text-white">Maintenance History</h3>

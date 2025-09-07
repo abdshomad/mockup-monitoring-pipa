@@ -10,9 +10,11 @@ const AssetManagementView: React.FC = () => {
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [assetForMaintenance, setAssetForMaintenance] = useState<Asset | null>(null);
+    const [suggestedTask, setSuggestedTask] = useState<string | null>(null);
     
-    const handleOpenScheduleModal = (asset: Asset) => {
+    const handleOpenScheduleModal = (asset: Asset, task?: string) => {
         setAssetForMaintenance(asset);
+        setSuggestedTask(task || null);
         setIsModalOpen(true);
     };
 
@@ -41,6 +43,7 @@ const AssetManagementView: React.FC = () => {
 
         setIsModalOpen(false);
         setAssetForMaintenance(null);
+        setSuggestedTask(null);
     };
 
     if (selectedAsset) {
@@ -52,11 +55,12 @@ const AssetManagementView: React.FC = () => {
             {assetForMaintenance && (
                  <ScheduleMaintenanceModal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => { setIsModalOpen(false); setAssetForMaintenance(null); setSuggestedTask(null); }}
                     onSchedule={handleScheduleMaintenance}
                     technicians={TECHNICIANS}
                     assetId={assetForMaintenance.assetId}
                     sensorId={assetForMaintenance.sensorId}
+                    suggestedTask={suggestedTask}
                 />
             )}
             <div className="space-y-6">

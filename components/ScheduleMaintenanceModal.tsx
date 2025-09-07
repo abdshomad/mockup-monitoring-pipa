@@ -8,10 +8,11 @@ interface ScheduleMaintenanceModalProps {
   technicians: Technician[];
   assetId: string;
   sensorId: string;
+  suggestedTask?: string | null;
 }
 
-const ScheduleMaintenanceModal: React.FC<ScheduleMaintenanceModalProps> = ({ isOpen, onClose, onSchedule, technicians, assetId, sensorId }) => {
-  const [task, setTask] = useState('');
+const ScheduleMaintenanceModal: React.FC<ScheduleMaintenanceModalProps> = ({ isOpen, onClose, onSchedule, technicians, assetId, sensorId, suggestedTask }) => {
+  const [task, setTask] = useState(suggestedTask || '');
   const [date, setDate] = useState('');
   const [technician, setTechnician] = useState(technicians[0]?.name || '');
 
