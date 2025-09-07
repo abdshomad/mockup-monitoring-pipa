@@ -3,7 +3,7 @@ import {
   LayoutGrid, Bell, Waypoints, Wrench, Map, BarChart3, Settings2,
   ClipboardList, Construction, ServerCog, Archive, Waves, Ear, Gauge,
   MapPin, AlertTriangle, CheckCircle2, Activity, TrendingUp, TrendingDown, SearchCode,
-  Shield, Search, Eye, FileText, HelpCircle, ListChecks, Paperclip, File,
+  Shield, Search, Eye, FileText, HelpCircle, ListChecks, Paperclip, File, Film,
   Sparkles, Send, X, Clipboard, PlayCircle, PauseCircle, Rewind,
   FastForward, Zap, ShieldCheck, Siren, KanbanSquare, Signal
 } from 'lucide-react';
@@ -46,6 +46,7 @@ export const ICONS = {
   actions: <ListChecks className="h-6 w-6" />,
   attachment: <Paperclip className="h-6 w-6" />,
   file: <File className="h-6 w-6" />,
+  video: <Film className="h-6 w-6" />,
   ai: <Sparkles className="h-6 w-6" strokeWidth={1.5} />,
   send: <Send className="h-5 w-5" />,
   close: <X />,

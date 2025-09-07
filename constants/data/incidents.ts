@@ -43,6 +43,7 @@ export const INCIDENTS: Incident[] = [
         followUpTasks: [
              { id: 'FUT-003', description: 'Install improved surge protection on gateway BL-GW-02.', assignedTo: 'Bob Williams', dueDate: getRelativeDate({ days: 14 }), status: FollowUpTaskStatus.Open },
              { id: 'FUT-004', description: 'Complete and file post-mortem report.', assignedTo: 'Operator 1', dueDate: getRelativeDate({ days: 6 }), status: FollowUpTaskStatus.Completed },
-        ]
+        ],
+        videoBriefingUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' // Placeholder for generated video
     }
 ];

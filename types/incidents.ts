@@ -43,4 +43,5 @@ export interface Incident {
   linkedAlertIds: string[];
   log: IncidentLogEntry[];
   followUpTasks?: FollowUpTask[];
+  videoBriefingUrl?: string;
 }
