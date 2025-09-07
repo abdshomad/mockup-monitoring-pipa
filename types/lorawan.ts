@@ -9,6 +9,11 @@ export enum LoraWANGatewayStatus {
     Offline = 'Offline',
 }
 
+export interface LoraWANDeviceBatteryHistoryPoint {
+    timestamp: string; // ISO String
+    voltage: number;
+}
+
 export interface LoraWANDevice {
     id: string; // Device EUI
     type: string;
@@ -18,6 +23,8 @@ export interface LoraWANDevice {
     snr: number; // Signal-to-Noise Ratio (dB)
     lastUplink: string; // ISO timestamp
     gatewayId: string;
+    predictedBatteryEOL?: string;
+    batteryVoltageHistory?: LoraWANDeviceBatteryHistoryPoint[];
 }
 
 export interface LoraWANGateway {

@@ -13,3 +13,4 @@ export * from './data/deployments';
 export * from './data/lorawan';
 export * from './data/lorawanInsights';
 export * from './data/longTermData';
+export * from './data/lorawanBatteryData';

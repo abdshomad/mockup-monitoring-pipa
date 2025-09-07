@@ -5,6 +5,7 @@ import { LoraWANDeviceStatus } from '../../types';
 // FIX: The 'Rssi' icon does not exist in 'lucide-react'. Corrected to 'Rss'.
 import { Battery, Rss, Server, RadioReceiver } from 'lucide-react';
 import SignalHistoryChart from './SignalHistoryChart';
+import DevicePredictiveAnalysis from './DevicePredictiveAnalysis';
 
 interface LoraWANDeviceDetailViewProps {
   deviceId: string;
@@ -26,6 +27,11 @@ const LoraWANDeviceDetailView: React.FC<LoraWANDeviceDetailViewProps> = ({ devic
       </div>
     );
   }
+
+  const handleScheduleMaintenance = (deviceId: string, task: string) => {
+    console.log(`Scheduling maintenance for ${deviceId}: ${task}`);
+    alert(`A new maintenance task has been requested for device ${deviceId}:\n\n"${task}"\n\n(This is a placeholder action for demonstration purposes)`);
+  };
 
   const getBatteryColor = (level: number) => {
     if (level > 50) return 'text-green-400';
@@ -63,6 +69,7 @@ const LoraWANDeviceDetailView: React.FC<LoraWANDeviceDetailViewProps> = ({ devic
                     {gateway && <div className="flex justify-between items-center"><span className="text-slate-400">Gateway Location</span><span className="font-medium text-white">{gateway.location}</span></div>}
                 </div>
             </div>
+            <DevicePredictiveAnalysis device={device} onScheduleMaintenance={handleScheduleMaintenance} />
              <div className="bg-slate-800 p-6 rounded-2xl shadow-lg flex items-center space-x-6">
                 <Battery className={`h-12 w-12 flex-shrink-0 ${getBatteryColor(device.batteryLevel)}`} />
                 <div>

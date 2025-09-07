@@ -1,5 +1,6 @@
 import { LoraWANGateway, LoraWANDevice, LoraWANGatewayStatus, LoraWANDeviceStatus, LoraWANDeviceHistoryPoint } from '../../types';
 import { getRelativeTimestamp } from '../../utils/time';
+import { LORAWAN_DEVICE_BATTERY_HISTORY } from './lorawanBatteryData';
 
 export const LORAWAN_GATEWAYS: LoraWANGateway[] = [
     { id: 'GW-01-REDLINE', status: LoraWANGatewayStatus.Online, location: 'Red Line - Sector A', connectedDevices: 5 },
@@ -8,7 +9,7 @@ export const LORAWAN_GATEWAYS: LoraWANGateway[] = [
     { id: 'GW-04-INTERCHANGE', status: LoraWANGatewayStatus.Online, location: 'Interchange Hub', connectedDevices: 3 },
 ];
 
-export const LORAWAN_DEVICES: LoraWANDevice[] = [
+const devices: LoraWANDevice[] = [
     // Devices for GW-01
     { id: 'A8610A3232387A6E', type: 'Vibration Sensor', status: LoraWANDeviceStatus.Online, batteryLevel: 98, rssi: -75, snr: 8.5, lastUplink: getRelativeTimestamp({ minutes: -2 }), gatewayId: 'GW-01-REDLINE' },
     { id: 'B1234C567890D12E', type: 'Pressure Sensor', status: LoraWANDeviceStatus.Online, batteryLevel: 95, rssi: -82, snr: 7.2, lastUplink: getRelativeTimestamp({ minutes: -5 }), gatewayId: 'GW-01-REDLINE' },
@@ -31,6 +32,12 @@ export const LORAWAN_DEVICES: LoraWANDevice[] = [
     { id: 'A8B9CADBDCEDFE01', type: 'Pressure Sensor', status: LoraWANDeviceStatus.LowBattery, batteryLevel: 18, rssi: -95, snr: 4.1, lastUplink: getRelativeTimestamp({ minutes: -15 }), gatewayId: 'GW-04-INTERCHANGE' },
     { id: 'B9CADBDCEDFE0123', type: 'Flowmeter', status: LoraWANDeviceStatus.Online, batteryLevel: 89, rssi: -73, snr: 9.5, lastUplink: getRelativeTimestamp({ minutes: -4 }), gatewayId: 'GW-04-INTERCHANGE' },
 ];
+
+export const LORAWAN_DEVICES: LoraWANDevice[] = devices.map(device => ({
+    ...device,
+    batteryVoltageHistory: LORAWAN_DEVICE_BATTERY_HISTORY[device.id] || [],
+}));
+
 
 const generateDeviceHistory = (baseRssi: number, baseSnr: number): LoraWANDeviceHistoryPoint[] => {
     const data: LoraWANDeviceHistoryPoint[] = [];
