@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import IndonesiaPipelineMap from '../PipelineDigitalTwin';
 import { Sensor } from '../../types';
@@ -20,6 +21,8 @@ const DigitalTwinCard: React.FC<DigitalTwinCardProps> = ({ sensors }) => {
                     sensors={sensors} 
                     alerts={historicalAlerts} 
                     currentTime={fixedTime} 
+                    // FIX: Added the required 'isIncidentMode' prop, which is false in this context.
+                    isIncidentMode={false}
                 />
             </div>
         </div>

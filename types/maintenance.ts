@@ -57,4 +57,5 @@ export interface Technician {
     avgResponseTime: number; // in hours
     successRate: number; // percentage
   };
+  currentLocation?: { x: number; y: number; };
 }

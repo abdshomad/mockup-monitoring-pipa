@@ -21,6 +21,10 @@ export const INCIDENTS: Incident[] = [
         followUpTasks: [
             { id: 'FUT-001', description: 'Conduct ultrasonic thickness testing on affected pipe section.', assignedTo: 'Alice Johnson', dueDate: getRelativeDate({ days: 4 }), status: FollowUpTaskStatus.Open },
             { id: 'FUT-002', description: 'File preliminary report with local law enforcement.', assignedTo: 'Andi (Control Room)', dueDate: getRelativeDate({ days: 1 }), status: FollowUpTaskStatus.InProgress },
+        ],
+        mapAnnotations: [
+            { id: 'anno-1', type: 'area', points: [{x: 350, y: 320}, {x: 430, y: 320}, {x: 430, y: 400}, {x: 350, y: 400}], color: 'rgba(239, 68, 68, 0.3)', label: 'Incident Zone', createdBy: 'Andi' },
+            { id: 'anno-2', type: 'text', points: [{x: 450, y: 310}], color: '#fef08a', label: 'Heavy machinery reported here', createdBy: 'Andi' }
         ]
     },
     {

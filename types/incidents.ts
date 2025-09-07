@@ -1,4 +1,5 @@
 import { AlertSeverity } from './alerts';
+import { MapAnnotation } from './map';
 
 // --- Incident Types ---
 
@@ -44,4 +45,5 @@ export interface Incident {
   log: IncidentLogEntry[];
   followUpTasks?: FollowUpTask[];
   videoBriefingUrl?: string;
+  mapAnnotations?: MapAnnotation[];
 }

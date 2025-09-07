@@ -17,7 +17,7 @@ export const MAINTENANCE_SCHEDULE: MaintenanceTask[] = [
 ];
 
 export const TECHNICIANS: Technician[] = [
-  { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', availability: TechnicianStatus.Available, stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 } },
-  { id: 'T-002', name: 'Bob Williams', team: 'Bravo', availability: TechnicianStatus.OnSite, stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 } },
-  { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', availability: TechnicianStatus.OffDuty, stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 } },
+  { id: 'T-001', name: 'Alice Johnson', team: 'Alpha', availability: TechnicianStatus.Available, stats: { tasksCompleted: 42, avgResponseTime: 4.2, successRate: 98 }, currentLocation: { x: 370, y: 320 } },
+  { id: 'T-002', name: 'Bob Williams', team: 'Bravo', availability: TechnicianStatus.OnSite, stats: { tasksCompleted: 35, avgResponseTime: 5.1, successRate: 95 }, currentLocation: { x: 760, y: 400 } },
+  { id: 'T-003', name: 'Charlie Brown', team: 'Alpha', availability: TechnicianStatus.OffDuty, stats: { tasksCompleted: 38, avgResponseTime: 4.5, successRate: 97 }, currentLocation: { x: 410, y: 340 } },
 ];

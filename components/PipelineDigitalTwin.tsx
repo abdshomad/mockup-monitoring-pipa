@@ -1,19 +1,25 @@
 
+
 import React, { useState } from 'react';
-import { Sensor, Alert } from '../../types';
+import { Sensor, Alert, Incident } from '../../types';
 import IndonesiaMapSvg from './pipeline/IndonesiaMapSvg';
 import { useHeatmapPoints } from '../../hooks/useHeatmapPoints';
 import HeatmapLayer from './pipeline/HeatmapLayer';
 import MarkersLayer from './pipeline/MarkersLayer';
 import TooltipLayer from './pipeline/TooltipLayer';
+import AnnotationLayer from './map/AnnotationLayer';
+import TechnicianTrackerLayer from './map/TechnicianTrackerLayer';
+import { TECHNICIANS } from '../../constants';
 
 interface IndonesiaPipelineMapProps {
     sensors: Sensor[];
     alerts: Alert[];
     currentTime: Date;
+    incident?: Incident;
+    isIncidentMode: boolean;
 }
 
-const IndonesiaPipelineMap: React.FC<IndonesiaPipelineMapProps> = ({ sensors, alerts, currentTime }) => {
+const IndonesiaPipelineMap: React.FC<IndonesiaPipelineMapProps> = ({ sensors, alerts, currentTime, incident, isIncidentMode }) => {
     const [hoveredSensor, setHoveredSensor] = useState<Sensor | null>(null);
     const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
     const heatmapPoints = useHeatmapPoints(currentTime);
@@ -51,6 +57,9 @@ const IndonesiaPipelineMap: React.FC<IndonesiaPipelineMapProps> = ({ sensors, al
                     onAlertClick={handleAlertClick}
                     onSensorHover={setHoveredSensor}
                 />
+                
+                {isIncidentMode && <AnnotationLayer annotations={incident?.mapAnnotations || []} />}
+                {isIncidentMode && <TechnicianTrackerLayer technicians={TECHNICIANS} />}
                 
                 <TooltipLayer
                     hoveredSensor={hoveredSensor}

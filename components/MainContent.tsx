@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from '../types';
+import { View, Incident } from '../types';
 import { useAppController } from '../hooks/useAppController';
 import { ALERTS } from '../constants';
 
@@ -54,7 +54,7 @@ const MainContent: React.FC<MainContentProps> = (props) => {
     return <AlertDetailView alert={selectedAlert} onBack={() => setSelectedAlertId(null)} onPromoteToIncident={handlePromoteToIncident} />;
   }
 
-  if (selectedIncidentId) {
+  if (selectedIncidentId && currentView !== 'Map View') {
       const selectedIncident = incidents.find(i => i.id === selectedIncidentId);
       const linkedAlerts = ALERTS.filter(a => selectedIncident?.linkedAlertIds.includes(a.id));
       return <IncidentDetailView incident={selectedIncident} linkedAlerts={linkedAlerts} onBack={() => setSelectedIncidentId(null)} onUpdate={handleUpdateIncident} />;
@@ -72,6 +72,9 @@ const MainContent: React.FC<MainContentProps> = (props) => {
       return <SensorsView sensorFilter={sensorFilter} />;
     case 'Incident Log':
       return <IncidentLogView incidents={incidents} onSelectIncident={setSelectedIncidentId} onDeclareIncident={handleDeclareIncident} />;
+    case 'Map View':
+        const incident = selectedIncidentId ? incidents.find(i => i.id === selectedIncidentId) : undefined;
+        return <MapView incident={incident} onUpdateIncident={handleUpdateIncident} />;
     default:
       const Component = viewComponents[currentView];
       // Fallback to dashboard with correct props if component is not found.
