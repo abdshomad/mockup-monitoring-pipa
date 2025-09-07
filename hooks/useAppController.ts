@@ -4,7 +4,7 @@ import { INCIDENTS } from '../constants';
 import { getRelativeTimestamp } from '../utils/time';
 
 export const useAppController = () => {
-  const [currentView, setCurrentView] = useState<View>('LoRaWAN Network');
+  const [currentView, setCurrentView] = useState<View>('Anomaly Detection');
   const [sensorFilter, setSensorFilter] = useState<SensorType | null>(null);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);

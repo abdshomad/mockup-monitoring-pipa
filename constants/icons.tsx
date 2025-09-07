@@ -2,7 +2,7 @@ import React from 'react';
 import {
   LayoutGrid, Bell, Waypoints, Wrench, Map, BarChart3, Settings2,
   ClipboardList, Construction, ServerCog, Archive, Waves, Ear, Gauge,
-  MapPin, AlertTriangle, CheckCircle2, Activity, TrendingUp, TrendingDown,
+  MapPin, AlertTriangle, CheckCircle2, Activity, TrendingUp, TrendingDown, SearchCode,
   Shield, Search, Eye, FileText, HelpCircle, ListChecks, Paperclip, File,
   Sparkles, Send, X, Clipboard, PlayCircle, PauseCircle, Rewind,
   FastForward, Zap, ShieldCheck, Siren, KanbanSquare, Signal
@@ -60,4 +60,5 @@ export const ICONS = {
   operationalEfficiency: <Zap className="h-6 w-6" />,
   riskAssessment: <ShieldCheck className="h-6 w-6" />,
   lorawan: <Signal />,
+  anomalyDetection: <SearchCode />,
 };

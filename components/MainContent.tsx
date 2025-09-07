@@ -27,6 +27,7 @@ import SystemConfigView from './SystemConfigView';
 import AlertDetailView from './AlertDetailView';
 import IncidentDetailView from './IncidentDetailView';
 import LoraWANView from './LoraWANView';
+import AnomalyDetectionView from './AnomalyDetectionView';
 
 const viewComponents: Record<View, React.FC<any>> = {
   'Dashboard': Dashboard, 'Alerts': AlertsView, 'Incident Log': IncidentLogView, 'Sensors': SensorsView,
@@ -35,7 +36,7 @@ const viewComponents: Record<View, React.FC<any>> = {
   'Implementation': ImplementationView, 'Quality Assurance': QualityAssuranceView,
   'Commissioning': CommissioningView, 'Asset Management': AssetManagementView,
   'System Health': SystemHealthView, 'Alert History': AlertHistoryView,
-  'Technician Performance': TechnicianPerformanceView, 'User Profile': UserProfileView,
+  'Technician Performance': TechnicianPerformanceView, 'Anomaly Detection': AnomalyDetectionView, 'User Profile': UserProfileView,
   'Notifications': NotificationsView, 'System Config': SystemConfigView, 'LoRaWAN Network': LoraWANView,
 };
 

@@ -41,3 +41,9 @@ export interface AlertsTrendDataPoint {
   day: string;
   count: number;
 }
+
+export interface LongTermDataPoint {
+    date: string;
+    avgVibration: number;
+    avgPressure: number;
+}

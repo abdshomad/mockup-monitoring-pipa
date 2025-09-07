@@ -6,7 +6,7 @@ export const menuConfig = {
     construction: ['Implementation', 'Quality Assurance', 'Commissioning'] as View[],
     operations: ['Dashboard', 'Alerts', 'Incident Log', 'Sensors', 'Map View'] as View[],
     maintenance: ['Scheduled Maintenance', 'Asset Management'] as View[],
-    analysis: ['System Health', 'LoRaWAN Network', 'Alert History', 'Technician Performance'] as View[],
+    analysis: ['System Health', 'LoRaWAN Network', 'Alert History', 'Anomaly Detection', 'Technician Performance'] as View[],
     system: ['User Profile', 'Notifications', 'System Config'] as View[],
 };
 
@@ -30,7 +30,7 @@ export const sidebarConfig: SidebarItem[] = [
     { type: 'header', label: 'Maintenance' },
     { type: 'expandable', label: 'Maintenance', icon: ICONS.maintenance, views: menuConfig.maintenance, menuKey: 'maintenance', children: [{ view: 'Scheduled Maintenance' }, { view: 'Asset Management' }] },
     { type: 'header', label: 'Analysis & Reporting' },
-    { type: 'expandable', label: 'Reporting', icon: ICONS.reporting, views: menuConfig.analysis, menuKey: 'analysis', children: [{ view: 'System Health' }, { view: 'LoRaWAN Network' }, { view: 'Alert History' }, { view: 'Technician Performance' }] },
+    { type: 'expandable', label: 'Reporting', icon: ICONS.reporting, views: menuConfig.analysis, menuKey: 'analysis', children: [{ view: 'System Health' }, { view: 'LoRaWAN Network' }, { view: 'Alert History' }, { view: 'Anomaly Detection' }, { view: 'Technician Performance' }] },
     { type: 'header', label: 'System' },
     { type: 'expandable', label: 'Settings', icon: ICONS.settings, views: menuConfig.system, menuKey: 'system', children: [{ view: 'User Profile' }, { view: 'Notifications' }, { view: 'System Config' }] },
 ];
